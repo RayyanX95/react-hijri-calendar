@@ -19,8 +19,7 @@ import { getHijriDate } from "./utils";
 
 import { JSX } from "react";
 import { AvailableDateInfo, SetSelectedDateFunc } from "./types";
-import { ChevronRightIcon } from "./ChevronRightIcon";
-import { ChevronLeftIcon } from "./ChevronLeftIcon";
+import { ChevronRightIcon, ChevronLeftIcon } from "./icons";
 
 const LABELS = {
   en: {
