@@ -126,7 +126,7 @@ export const Calendar = ({
       type="button"
       onClick={action === "prev" ? goToPreviousMonth : goToNextMonth}
     >
-      {action === "prev" ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+      {action === "prev" ? <ChevronLeftIcon /> : <ChevronRightIcon />}
     </button>
   );
 
