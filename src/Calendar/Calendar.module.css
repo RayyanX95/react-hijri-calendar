@@ -1,0 +1,135 @@
+.calendarContainer {
+  width: 100%;
+  background-color: white;
+  border-radius: 8px;
+}
+
+.header {
+  display: flex;
+  height: 48px;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #f9fafb;
+  color: #161616;
+  padding: 0 24px;
+}
+
+.monthYearText span:first-child {
+  font-size: 22px;
+  padding: 0 8px;
+  font-weight: bold;
+}
+
+@media (min-width: 768px) {
+  .calendarContainer {
+    max-width: 92vw;
+    font-size: 14px;
+  }
+  .header {
+    height: 48px;
+  }
+  .monthYearText span:first-child {
+    font-size: 18px;
+  }
+}
+
+.chevronButton {
+  background-color: transparent;
+  border: none;
+}
+
+.tableContainer {
+  overflow-x: auto;
+}
+
+.table {
+  min-width: 100%;
+  border: 3px solid #f8f8f8;
+  background-color: white;
+}
+
+.tableHeader {
+  border: 3px solid #f9fafb;
+  padding: 4px;
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  .tableHeader {
+    font-size: 16px;
+  }
+}
+
+.tableCell {
+  padding: 18px 10px;
+  border: 2px solid #f9fafb;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 600;
+  transition: background-color 1000ms;
+  cursor: pointer;
+  opacity: 1;
+  background-color: white;
+  color: inherit;
+}
+
+@media (min-width: 768px) {
+  .tableCell {
+    padding: 24px 4px;
+    border-width: 1px;
+    font-size: 16px;
+  }
+}
+
+.selected {
+  background-color: #1b8354 !important;
+  color: white !important;
+}
+
+.unavailable {
+  background-color: #e5e7eb !important;
+  color: #6c737f !important;
+  cursor: not-allowed !important;
+}
+
+.currentDay:not(.selected) {
+  color: #1b8354 !important;
+}
+
+.available:hover {
+  background-color: #f3f4f6 !important;
+}
+
+.unavailable:hover {
+  background-color: #e5e7eb !important;
+}
+
+.cellContent {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.dayContainer {
+  font-weight: 600;
+  opacity: 1;
+}
+
+.notCurrentMonth .dayContainer {
+  opacity: 0.7;
+}
+
+.iconsContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.actionsContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}

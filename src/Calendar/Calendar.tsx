@@ -1,19 +1,5 @@
-import { isSameDay, format, parse, isToday } from "date-fns";
-
-import {
-  ActionsContainer,
-  CalendarContainer,
-  ChevronButton,
-  DayContainer,
-  Header,
-  IconsContainer,
-  MonthYearText,
-  Table,
-  TableCell,
-  TableContainer,
-  TableHeader,
-  CellContent,
-} from "./StyledComponents";
+import { format, isToday } from "date-fns";
+import styles from "./Calendar.module.css";
 import { useManageCalendar } from "./useManageCalendar";
 import { getHijriDate } from "./utils";
 
@@ -107,9 +93,7 @@ export const Calendar = ({
   dayCellClassName,
 }: CalendarProps): JSX.Element => {
   const labels = LABELS[lang] || LABELS.en;
-
   const {
-    weekdayNames,
     weeks,
     currentMonthYear,
     handleDateClick,
@@ -121,42 +105,46 @@ export const Calendar = ({
     currentActiveViewDate,
   } = useManageCalendar(availableDatesInfo, setSelectedDate, lang);
 
-  // Use internal weekday labels
   const weekDays = labels.weekdays;
 
   const renderChevronIcon = (action: "prev" | "next") => (
-    <ChevronButton
-      $isRtl={lang === "en"}
+    <button
+      className={styles.chevronButton}
       type="button"
       onClick={action === "prev" ? goToPreviousMonth : goToNextMonth}
     >
       {action === "prev" ? <ChevronRightIcon /> : <ChevronLeftIcon />}
-    </ChevronButton>
+    </button>
   );
 
   return (
-    <CalendarContainer className={className || "text-xs-regular"} style={style}>
-      <Header>
-        <MonthYearText>
+    <div
+      className={`${styles.calendarContainer} ${className || ""}`}
+      style={style}
+    >
+      <div className={styles.header}>
+        <div className={styles.monthYearText}>
           <span>{currentMonthYear.month}</span>
           <span>{currentMonthYear.year}</span>
-        </MonthYearText>
-        <ActionsContainer>
+        </div>
+        <div>
           <button onClick={toggleHijri}>
             {isHijri ? labels.gregorian : labels.hijri}
           </button>
-          <IconsContainer>
+          <span>
             {renderChevronIcon("prev")}
             {renderChevronIcon("next")}
-          </IconsContainer>
-        </ActionsContainer>
-      </Header>
-      <TableContainer>
-        <Table>
+          </span>
+        </div>
+      </div>
+      <div className={styles.tableContainer}>
+        <table className={styles.table}>
           <thead>
             <tr>
               {weekDays.map((day, index) => (
-                <TableHeader key={index}>{day}</TableHeader>
+                <th className={styles.tableHeader} key={index}>
+                  {day}
+                </th>
               ))}
             </tr>
           </thead>
@@ -175,19 +163,15 @@ export const Calendar = ({
                     )?.dateStatus === "Available";
                   const isCurrentDay = isToday(date);
                   const hijriDate = getHijriDate(date);
-
                   const leaveStatement = availableDatesInfo?.find(
                     (item) => item.date === format(date, "yyyyMMdd")
                   )?.leaveStatement;
-
-                  // Determine if this date belongs to the current month being viewed
                   const isCurrentMonthDate = isHijri
                     ? hijriDate.month === currentHijriDate.month &&
                       hijriDate.year === currentHijriDate.year
                     : format(date, "yyyy-MM") ===
                       format(currentActiveViewDate, "yyyy-MM");
 
-                  // Custom renderer support
                   if (renderDayCell) {
                     return renderDayCell({
                       date,
@@ -201,30 +185,35 @@ export const Calendar = ({
                   }
 
                   return (
-                    <TableCell
+                    <td
                       key={dateIndex}
-                      $isAvailable={isAvailable}
-                      $isCurrentDay={isCurrentDay}
-                      $isCurrentMonth={isCurrentMonthDate}
-                      $isSelected={isSelectedDate}
-                      onClick={() => handleDateClick(date)}
+                      className={[
+                        styles.tableCell,
+                        isSelectedDate ? styles.selected : "",
+                        isCurrentDay ? styles.currentDay : "",
+                        isAvailable ? styles.available : styles.unavailable,
+                        isCurrentMonthDate
+                          ? styles.currentMonth
+                          : styles.notCurrentMonth,
+                        dayCellClassName || "",
+                      ].join(" ")}
                       style={dayCellStyle}
-                      className={dayCellClassName}
+                      onClick={() => handleDateClick(date)}
                     >
-                      <CellContent>
-                        <DayContainer $isCurrentMonth={isCurrentMonthDate}>
+                      <div className={styles.cellContent}>
+                        <div className={styles.dayContainer}>
                           {isHijri ? hijriDate.day : format(date, "d")}
-                        </DayContainer>
-                      </CellContent>
-                    </TableCell>
+                        </div>
+                      </div>
+                    </td>
                   );
                 })}
               </tr>
             ))}
           </tbody>
-        </Table>
-      </TableContainer>
-    </CalendarContainer>
+        </table>
+      </div>
+    </div>
   );
 };
 
