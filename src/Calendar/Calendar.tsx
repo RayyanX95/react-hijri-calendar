@@ -148,7 +148,7 @@ export const Calendar = ({
           <span>{currentMonthYear.year}</span>
         </div>
         <div>
-          <button onClick={toggleHijri}>
+          <button className={styles.toggleButton} onClick={toggleHijri}>
             {isHijri ? labels.gregorian : labels.hijri}
           </button>
           <span>
