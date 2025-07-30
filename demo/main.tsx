@@ -29,7 +29,9 @@ function DemoApp() {
   };
   return (
     <div style={{ maxWidth: 1200, margin: "2rem auto", padding: "0 1rem" }}>
-      <button onClick={toggleLanguage}>Toggle Language</button>
+      <button onClick={toggleLanguage}>
+        Toggle Language ({lang === "en" ? "Ar" : "En"})
+      </button>
       <h2>Calendar Demo</h2>
       <Calendar
         selectedDate={selectedDate}
