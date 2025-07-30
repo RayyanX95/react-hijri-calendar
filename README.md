@@ -40,20 +40,20 @@ function MyComponent() {
 
 ## Props
 
-| Prop               | Type                     | Description                                                           |
-| ------------------ | ------------------------ | --------------------------------------------------------------------- |
-| selectedDate       | `string \| Date \| null` | Currently selected date (yyyyMMdd, Date, or null)                     |
-| setSelectedDate    | `(date: string) => void` | Callback to update selected date                                      |
-| availableDatesInfo | `AvailableDateInfo[]`    | Array of date info objects                                            |
-| isLoading          | `boolean`                | Show loading state                                                    |
-| lang               | `'en' \| 'ar'`           | Language for labels                                                   |
-| renderDayCell      | `function`               | Custom day cell renderer                                              |
-| className          | `string`                 | Custom class for main container                                       |
-| style              | `React.CSSProperties`    | Inline styles for main container (supports CSS variables for theming) |
-| dayCellStyle       | `React.CSSProperties`    | Inline styles for day cells                                           |
-| dayCellClassName   | `string`                 | Custom class for day cells                                            |
-| primaryColor       | `string`                 | Primary color (overrides default)                                     |
-| unavailableColor   | `string`                 | Unavailable color (overrides default)                                 |
+| Prop               | Type                     | Description                                                                     |
+| ------------------ | ------------------------ | ------------------------------------------------------------------------------- |
+| selectedDate       | `string \| Date \| null` | Currently selected date (yyyyMMdd, Date, or null)                               |
+| setSelectedDate    | `(date: string) => void` | Callback to update selected date. The date string will be in `yyyyMMdd` format. |
+| availableDatesInfo | `AvailableDateInfo[]`    | Array of date info objects                                                      |
+| isLoading          | `boolean`                | Show loading state                                                              |
+| lang               | `'en' \| 'ar'`           | Language for labels                                                             |
+| renderDayCell      | `function`               | Custom day cell renderer                                                        |
+| className          | `string`                 | Custom class for main container                                                 |
+| style              | `React.CSSProperties`    | Inline styles for main container (supports CSS variables for theming)           |
+| dayCellStyle       | `React.CSSProperties`    | Inline styles for day cells                                                     |
+| dayCellClassName   | `string`                 | Custom class for day cells                                                      |
+| primaryColor       | `string`                 | Primary color (overrides default)                                               |
+| unavailableColor   | `string`                 | Unavailable color (overrides default)                                           |
 
 ## Theming & Styling
 
