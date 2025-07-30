@@ -234,7 +234,9 @@ export const Calendar = ({
                     >
                       <div className={styles.cellContent}>
                         <div className={styles.dayContainer}>
-                          {isHijri ? hijriDate.day : format(date, "d")}
+                          {isHijri
+                            ? String(hijriDate.day ?? "")
+                            : format(date, "d")}
                         </div>
                       </div>
                     </td>

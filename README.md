@@ -13,13 +13,13 @@ A pluggable React calendar component supporting both Hijri and Gregorian dates, 
 ## Installation
 
 ```bash
-npm install react-multi-calendar
+npm install react-hijri-calendar
 ```
 
 ## Usage
 
 ```tsx
-import { Calendar } from "react-multi-calendar";
+import { Calendar } from "react-hijri-calendar";
 
 function MyComponent() {
   const [selectedDate, setSelectedDate] = useState(null);
@@ -98,7 +98,7 @@ All types are exported from the package:
 import type {
   AvailableDateInfo,
   SetSelectedDateFunc,
-} from "react-multi-calendar";
+} from "react-hijri-calendar";
 ```
 
 ## License
