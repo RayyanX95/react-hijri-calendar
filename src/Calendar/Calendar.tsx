@@ -120,15 +120,27 @@ export const Calendar = ({
 
   const weekDays = labels.weekdays;
 
-  const renderChevronIcon = (action: "prev" | "next") => (
-    <button
-      className={styles.chevronButton}
-      type="button"
-      onClick={action === "prev" ? goToPreviousMonth : goToNextMonth}
-    >
-      {action === "prev" ? <ChevronLeftIcon /> : <ChevronRightIcon />}
-    </button>
-  );
+  const renderChevronIcon = (action: "prev" | "next") => {
+    const isRtl = lang === "ar";
+    // In RTL, swap the icons for prev/next
+    const Icon =
+      action === "prev"
+        ? isRtl
+          ? ChevronRightIcon
+          : ChevronLeftIcon
+        : isRtl
+        ? ChevronLeftIcon
+        : ChevronRightIcon;
+    return (
+      <button
+        className={styles.chevronButton}
+        type="button"
+        onClick={action === "prev" ? goToPreviousMonth : goToNextMonth}
+      >
+        <Icon />
+      </button>
+    );
+  };
 
   // Merge default CSS variable values with user style prop and global props
   const mergedStyle = {
@@ -188,9 +200,9 @@ export const Calendar = ({
                   )?.leaveStatement;
                   const isCurrentMonthDate = isHijri
                     ? hijriDate.month === currentHijriDate.month &&
-                    hijriDate.year === currentHijriDate.year
+                      hijriDate.year === currentHijriDate.year
                     : format(date, "yyyy-MM") ===
-                    format(currentActiveViewDate, "yyyy-MM");
+                      format(currentActiveViewDate, "yyyy-MM");
 
                   if (renderDayCell) {
                     return renderDayCell({
