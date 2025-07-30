@@ -24,7 +24,15 @@
   ],
   "author": "Ibrahim AlRayyan <ibrahim.alrayany@gmail.com> (https://github.com/RayyanX95)",
   "license": "ISC",
-  "description": "A pluggable React dual calendar component supporting Hijri and Gregorian dates, i18n, and theming.",
+  "description": "A pluggable React calendar component supporting Hijri and Gregorian dates, theming, and custom rendering.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/RayyanX95/react-hijri-calendar.git"
+  },
+  "homepage": "https://github.com/RayyanX95/react-hijri-calendar#readme",
+  "bugs": {
+    "url": "https://github.com/RayyanX95/react-hijri-calendar/issues"
+  },
   "peerDependencies": {
     "react": ">=17.0.0",
     "react-dom": ">=17.0.0",
