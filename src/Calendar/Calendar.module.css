@@ -30,9 +30,6 @@
   .header {
     height: 48px;
   }
-  .monthYearText span:first-child {
-    /* font-size: 18px; */
-  }
   .monthYearText span:last-child {
     font-size: 16px;
   }

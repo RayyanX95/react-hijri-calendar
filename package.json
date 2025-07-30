@@ -1,20 +1,38 @@
 {
   "name": "react-dual-calendar",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "dist/index.cjs.js",
+  "module": "dist/index.esm.js",
+  "types": "dist/types/Calendar/index.d.ts",
+  "sideEffects": false,
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "rollup -c",
+    "prepublishOnly": "npm run build"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "react",
+    "calendar",
+    "date-picker",
+    "dual-calendar",
+    "hijri",
+    "gregorian",
+    "component"
+  ],
+  "author": "Your Name <your@email.com>",
   "license": "ISC",
-  "description": "",
+  "description": "A pluggable React dual calendar component supporting Hijri and Gregorian dates, i18n, and theming.",
+  "peerDependencies": {
+    "react": ">=17.0.0",
+    "react-dom": ">=17.0.0",
+    "styled-components": ">=6.0.0"
+  },
   "dependencies": {
     "date-fns": "^4.1.0",
-    "moment-hijri": "^3.0.0",
-    "react": "^19.1.1",
-    "react-dom": "^19.1.1",
-    "styled-components": "^6.1.19"
+    "moment-hijri": "^3.0.0"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^28.0.6",
@@ -28,6 +46,7 @@
     "@vitejs/plugin-react": "^4.7.0",
     "rollup": "^2.79.2",
     "rollup-plugin-peer-deps-external": "^2.2.4",
+    "rollup-plugin-postcss": "^4.0.2",
     "rollup-plugin-terser": "^7.0.2",
     "typescript": "^5.8.3",
     "vite": "^6.3.5"

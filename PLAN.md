@@ -2,14 +2,14 @@
 
 ## Next Steps for Making the Calendar Component Pluggable and NPM-Ready
 
-1. **Component API Review & Improvements**
+1. **Component API Review & Improvements** -> DONE
 
    - Ensure all props are well-typed and documented.
    - Allow customization via props (e.g., custom renderers, styles, locale, etc.).
    - Expose useful subcomponents/types if needed.
    - Make locales without using any packages, just list of labels of `en` and `ar` that render depending on `lang` prop
 
-2. **Styling & Theming**
+2. **Styling & Theming** --> DONE
 
    - Support style overrides via props or context.
    - Document how to customize appearance.
