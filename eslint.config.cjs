@@ -11,11 +11,7 @@ const prettier = require('eslint-plugin-prettier');
 /** @type {import('eslint').Linter.FlatConfig[]} */
 module.exports = [
   {
-    ignores: [
-      'node_modules',
-      'dist',
-      '**/*.d.ts',
-    ],
+    ignores: ['node_modules', 'dist', '**/*.d.ts'],
   },
   js.configs.recommended,
   // Prettier recommended config for flat config
@@ -45,7 +41,10 @@ module.exports = [
       'react/react-in-jsx-scope': 'off',
       'react/prop-types': 'off',
       'no-unused-vars': 'warn',
-      '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
+      '@typescript-eslint/no-unused-vars': [
+        'warn',
+        { argsIgnorePattern: '^_', varsIgnorePattern: '^_' },
+      ],
       'import/no-unresolved': 'error',
       'import/named': 'error',
     },
