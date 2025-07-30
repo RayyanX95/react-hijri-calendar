@@ -94,7 +94,7 @@ export const Calendar = ({
     isHijri,
     currentHijriDate,
     currentActiveViewDate,
-  } = useManageCalendar(availableDatesInfo, setSelectedDate);
+  } = useManageCalendar(availableDatesInfo, setSelectedDate, lang);
 
   // Use internal weekday labels
   const weekDays = labels.weekdays;

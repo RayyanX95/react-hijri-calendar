@@ -1,19 +1,40 @@
 import { useCallback, useMemo, useState } from "react";
-import { addDays, addMonths, format, getYear, setDay, subMonths } from "date-fns";
+import {
+  addDays,
+  addMonths,
+  format,
+  getYear,
+  setDay,
+  subMonths,
+} from "date-fns";
 import { arSA, enUS } from "date-fns/locale";
 
-import { getSelectedLang } from "@api";
+import {
+  hijriFirstMonthIndex,
+  hijriLastMonthIndex,
+  hijriMonthsAr,
+  hijriMonthsEn,
+} from "./constants";
+import {
+  getDaysInMonthArray,
+  getHijriDate,
+  isFirstHijriMonth,
+  isLastHijriMonth,
+} from "./utils";
+import { AvailableDateInfo, SetSelectedDateFunc } from "./types";
 
-import { hijriFirstMonthIndex, hijriLastMonthIndex, hijriMonthsAr, hijriMonthsEn } from "./constants";
-import { getDaysInMonthArray, getHijriDate, isFirstHijriMonth, isLastHijriMonth } from "./utils";
+export const useManageCalendar = (
+  availableDatesInfo: AvailableDateInfo[] | null,
+  setSelectedDate: SetSelectedDateFunc,
+  lang: "en" | "ar"
+) => {
+  const [currentActiveViewDate, setCurrentActiveViewDate] = useState(
+    new Date()
+  );
+  const [currentHijriDate, setCurrentHijriDate] = useState(() =>
+    getHijriDate(new Date())
+  );
 
-import type { AvailableDateInfo, SetSelectedDateFunc } from "@models";
-
-export const useManageCalendar = (availableDatesInfo: AvailableDateInfo[] | null, setSelectedDate: SetSelectedDateFunc) => {
-  const [currentActiveViewDate, setCurrentActiveViewDate] = useState(new Date());
-  const [currentHijriDate, setCurrentHijriDate] = useState(() => getHijriDate(new Date()));
-
-  const lang = useMemo(() => getSelectedLang(), []);
   const [isHijri, setIsHijri] = useState(lang === "ar");
 
   const localeToUse = useMemo(() => (lang === "ar" ? arSA : enUS), [lang]);
@@ -31,9 +52,17 @@ export const useManageCalendar = (availableDatesInfo: AvailableDateInfo[] | null
   const goToPreviousMonth = () => {
     if (isHijri) {
       const isFirstMonth = isFirstHijriMonth(currentHijriDate);
-      const newMonth = isFirstMonth ? hijriLastMonthIndex : currentHijriDate.month - 1;
-      const newYear = isFirstMonth ? currentHijriDate.year - 1 : currentHijriDate.year;
-      setCurrentHijriDate({ ...currentHijriDate, month: newMonth, year: newYear });
+      const newMonth = isFirstMonth
+        ? hijriLastMonthIndex
+        : currentHijriDate.month - 1;
+      const newYear = isFirstMonth
+        ? currentHijriDate.year - 1
+        : currentHijriDate.year;
+      setCurrentHijriDate({
+        ...currentHijriDate,
+        month: newMonth,
+        year: newYear,
+      });
     } else {
       setCurrentActiveViewDate(subMonths(currentActiveViewDate, 1));
     }
@@ -42,9 +71,17 @@ export const useManageCalendar = (availableDatesInfo: AvailableDateInfo[] | null
   const goToNextMonth = () => {
     if (isHijri) {
       const isLastMonth = isLastHijriMonth(currentHijriDate);
-      const newMonth = isLastMonth ? hijriFirstMonthIndex : currentHijriDate.month + 1;
-      const newYear = isLastMonth ? currentHijriDate.year + 1 : currentHijriDate.year;
-      setCurrentHijriDate({ ...currentHijriDate, month: newMonth, year: newYear });
+      const newMonth = isLastMonth
+        ? hijriFirstMonthIndex
+        : currentHijriDate.month + 1;
+      const newYear = isLastMonth
+        ? currentHijriDate.year + 1
+        : currentHijriDate.year;
+      setCurrentHijriDate({
+        ...currentHijriDate,
+        month: newMonth,
+        year: newYear,
+      });
     } else {
       setCurrentActiveViewDate(addMonths(currentActiveViewDate, 1));
     }
@@ -69,14 +106,19 @@ export const useManageCalendar = (availableDatesInfo: AvailableDateInfo[] | null
       };
     }
     return {
-      month: format(currentActiveViewDate, "MMMM", { locale: localeToUse }),
+      month: format(currentActiveViewDate, "MMMM"),
+      // TODO: ...
+      // month: format(currentActiveViewDate, "MMMM", { locale: localeToUse }),
       year: getYear(currentActiveViewDate).toString(),
     };
-
   };
 
   const weeks = [];
-  const days = getDaysInMonthArray(isHijri, currentActiveViewDate, currentHijriDate);
+  const days = getDaysInMonthArray(
+    isHijri,
+    currentActiveViewDate,
+    currentHijriDate
+  );
   for (let i = 0; i < days.length; i += 7) {
     weeks.push(days.slice(i, i + 7));
   }
@@ -84,10 +126,14 @@ export const useManageCalendar = (availableDatesInfo: AvailableDateInfo[] | null
   // Generate consistent weekday names starting from Sunday
   const anyDate = new Date(1970, 0, 1);
   const baseSunday = setDay(anyDate, 0);
-  const weekdayNames = Array.from({ length: 7 }).map((_, i) =>
-    format(addDays(baseSunday, i), localeToUse === enUS ? "EE" : "EEEE", {
-      locale: localeToUse,
-    }),
+  const weekdayNames = Array.from({ length: 7 }).map(
+    (_, i) =>
+      format(addDays(baseSunday, i), localeToUse === enUS ? "EE" : "EEEE")
+
+    // TODO: ..
+    // format(addDays(baseSunday, i), localeToUse === enUS ? "EE" : "EEEE", {
+    //   locale: localeToUse,
+    // })
   );
 
   const currentMonthYear = getCurrentMonthYearText();
@@ -103,5 +149,5 @@ export const useManageCalendar = (availableDatesInfo: AvailableDateInfo[] | null
     currentHijriDate,
     currentActiveViewDate,
     currentMonthYear,
-  }
-}
+  };
+};
