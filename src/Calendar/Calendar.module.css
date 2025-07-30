@@ -38,6 +38,8 @@
 .chevronButton {
   background-color: transparent;
   border: none;
+  padding: 0;
+  cursor: pointer;
 }
 
 .tableContainer {
@@ -147,4 +149,18 @@
   color: var(--calendar-primary);
   font-weight: bold;
     font-size: 14px;
+}
+
+.actionsContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+}
+
+.chevronContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }

@@ -147,11 +147,11 @@ export const Calendar = ({
           <span>{currentMonthYear.month}</span>
           <span>{currentMonthYear.year}</span>
         </div>
-        <div>
+        <div className={styles.actionsContainer}>
           <button className={styles.toggleButton} onClick={toggleHijri}>
             {isHijri ? labels.gregorian : labels.hijri}
           </button>
-          <span>
+          <span className={styles.chevronContainer}>
             {renderChevronIcon("prev")}
             {renderChevronIcon("next")}
           </span>
