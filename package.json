@@ -5,6 +5,7 @@
   "module": "dist/index.esm.js",
   "types": "dist/types/Calendar/index.d.ts",
   "sideEffects": false,
+  "type": "module",
   "files": [
     "dist",
     "README.md"
@@ -12,7 +13,7 @@
   "scripts": {
     "build": "rollup -c",
     "prepublishOnly": "npm run build",
-    "lint": "eslint . --ext .ts,.tsx",
+    "lint": "eslint",
     "format": "prettier --write .",
     "test": "jest"
   },
@@ -62,6 +63,7 @@
     "@vitejs/plugin-react": "^4.7.0",
     "eslint": "^9.32.0",
     "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-prettier": "^5.5.3",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^5.2.0",

@@ -13,19 +13,7 @@ import React, {
 } from 'react';
 import { AvailableDateInfo, SetSelectedDateFunc } from './types';
 import { ChevronRightIcon, ChevronLeftIcon } from './icons';
-
-const LABELS = {
-  en: {
-    hijri: 'Hijri',
-    gregorian: 'Gregorian',
-    weekdays: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
-  },
-  ar: {
-    hijri: 'هجري',
-    gregorian: 'ميلادي',
-    weekdays: ['أحد', 'اثنين', 'ثلاثاء', 'أربعاء', 'خميس', 'جمعة', 'سبت'],
-  },
-};
+import { LABELS } from './i18n';
 
 interface CalendarProps {
   /** Currently selected date (string in yyyyMMdd or Date object, or null) */
