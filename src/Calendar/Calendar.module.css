@@ -1,4 +1,6 @@
 .calendarContainer {
+  --calendar-primary: #1b8354;
+  --calendar-unavailable: #6c737f;
   width: 100%;
   background-color: white;
   border-radius: 8px;
@@ -82,18 +84,18 @@
 }
 
 .selected {
-  background-color: #1b8354 !important;
+  background-color: var(--calendar-primary) !important;
   color: white !important;
 }
 
 .unavailable {
   background-color: #e5e7eb !important;
-  color: #6c737f !important;
+  color: var(--calendar-unavailable) !important;
   cursor: not-allowed !important;
 }
 
 .currentDay:not(.selected) {
-  color: #1b8354 !important;
+  color: var(--calendar-primary) !important;
 }
 
 .available:hover {

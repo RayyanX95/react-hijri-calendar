@@ -43,8 +43,8 @@ interface CalendarProps {
   }) => JSX.Element;
   /** Optional: Style overrides */
   className?: string;
-  /** Optional: Style overrides for the main calendar container */
-  style?: React.CSSProperties;
+  /** Optional: Style overrides for the main calendar container, including CSS variables for theming */
+  style?: React.CSSProperties & Record<string, any>;
   /** Optional: Style overrides for day cells */
   dayCellStyle?: React.CSSProperties;
   /** Optional: Class name for day cells */
@@ -61,19 +61,24 @@ interface CalendarProps {
  * @param {"en"|"ar"} [props.lang] - Language for labels
  * @param {function} [props.renderDayCell] - Custom day cell renderer
  * @param {string} [props.className] - Optional className for style overrides
- * @param {object} [props.style] - Optional style for main calendar container
+ * @param {object} [props.style] - Optional style for main calendar container. You can override theme colors by passing CSS variables, e.g.:
+ *   style={{ '--calendar-primary': '#ff6600', '--calendar-unavailable': '#999999' }}
  * @param {object} [props.dayCellStyle] - Optional style for day cells
  * @param {string} [props.dayCellClassName] - Optional className for day cells
  * @returns {JSX.Element} Calendar component
  *
- * ## Customizing Appearance
+ * ## Customizing Appearance and Colors
  *
- * You can override styles using the `className`, `style`, `dayCellStyle`, and `dayCellClassName` props:
+ * You can override styles and theme colors using the `className`, `style`, `dayCellStyle`, and `dayCellClassName` props:
  *
  * ```tsx
  * <Calendar
  *   className="my-calendar"
- *   style={{ background: '#f0f0f0' }}
+ *   style={{
+ *     background: '#f0f0f0',
+ *     '--calendar-primary': '#ff6600',
+ *     '--calendar-unavailable': '#999999',
+ *   }}
  *   dayCellStyle={{ borderRadius: 8 }}
  *   dayCellClassName="my-day-cell"
  *   ...
@@ -117,10 +122,17 @@ export const Calendar = ({
     </button>
   );
 
+  // Merge default CSS variable values with user style prop
+  const mergedStyle = {
+    "--calendar-primary": "#1b8354",
+    "--calendar-unavailable": "#6c737f",
+    ...style,
+  } as React.CSSProperties;
+
   return (
     <div
       className={`${styles.calendarContainer} ${className || ""}`}
-      style={style}
+      style={mergedStyle}
     >
       <div className={styles.header}>
         <div className={styles.monthYearText}>
