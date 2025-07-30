@@ -30,3 +30,4 @@ jobs:
       - run: npm ci
       - run: npx tsc --noEmit
       - run: npx eslint . --ext .ts,.tsx --max-warnings=0 || true
+      - run: npx prettier --check .
