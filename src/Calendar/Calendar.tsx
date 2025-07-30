@@ -188,9 +188,9 @@ export const Calendar = ({
                   )?.leaveStatement;
                   const isCurrentMonthDate = isHijri
                     ? hijriDate.month === currentHijriDate.month &&
-                      hijriDate.year === currentHijriDate.year
+                    hijriDate.year === currentHijriDate.year
                     : format(date, "yyyy-MM") ===
-                      format(currentActiveViewDate, "yyyy-MM");
+                    format(currentActiveViewDate, "yyyy-MM");
 
                   if (renderDayCell) {
                     return renderDayCell({
