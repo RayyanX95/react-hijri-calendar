@@ -29,13 +29,19 @@ export default [
       nodeResolve(),
       commonjs(),
       postcss({ modules: true }),
-      typescript({ tsconfig: './tsconfig.json', declaration: true, declarationDir: 'dist/types', rootDir: 'src' }),
+      typescript({
+        tsconfig: './tsconfig.json',
+        declaration: true,
+        declarationDir: 'dist/types',
+        rootDir: 'src',
+      }),
       terser(),
     ],
     external: [
       ...Object.keys(pkg.peerDependencies || {}),
       ...Object.keys(pkg.dependencies || {}),
-      'react', 'react-dom',
+      'react',
+      'react-dom',
     ],
   },
 ];

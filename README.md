@@ -19,12 +19,12 @@ npm install react-hijri-calendar
 ## Usage
 
 ```tsx
-import { Calendar } from "react-hijri-calendar";
+import { Calendar } from 'react-hijri-calendar';
 
 function MyComponent() {
   const [selectedDate, setSelectedDate] = useState(null);
   const availableDatesInfo = [
-    { date: "20250730", dateStatus: "Available", leaveStatement: "" },
+    { date: '20250730', dateStatus: 'Available', leaveStatement: '' },
     // ...
   ];
   return (
@@ -82,7 +82,7 @@ Override colors and styles using the `primaryColor`, `unavailableColor`, `classN
     isCurrentMonth,
     hijriDate,
   }) => (
-    <td style={{ background: isSelected ? "gold" : undefined }}>
+    <td style={{ background: isSelected ? 'gold' : undefined }}>
       {hijriDate.day}
     </td>
   )}
@@ -98,7 +98,7 @@ All types are exported from the package:
 import type {
   AvailableDateInfo,
   SetSelectedDateFunc,
-} from "react-hijri-calendar";
+} from 'react-hijri-calendar';
 ```
 
 ## License

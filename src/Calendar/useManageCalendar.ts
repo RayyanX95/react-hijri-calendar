@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from 'react';
 import {
   addDays,
   addMonths,
@@ -6,44 +6,44 @@ import {
   getYear,
   setDay,
   subMonths,
-} from "date-fns";
-import { arSA, enUS } from "date-fns/locale";
+} from 'date-fns';
+import { arSA, enUS } from 'date-fns/locale';
 
 import {
   hijriFirstMonthIndex,
   hijriLastMonthIndex,
   hijriMonthsAr,
   hijriMonthsEn,
-} from "./constants";
+} from './constants';
 import {
   getDaysInMonthArray,
   getHijriDate,
   isFirstHijriMonth,
   isLastHijriMonth,
-} from "./utils";
-import { AvailableDateInfo, SetSelectedDateFunc } from "./types";
+} from './utils';
+import { AvailableDateInfo, SetSelectedDateFunc } from './types';
 
 export const useManageCalendar = (
   availableDatesInfo: AvailableDateInfo[] | null,
   setSelectedDate: SetSelectedDateFunc,
-  lang: "en" | "ar"
+  lang: 'en' | 'ar',
 ) => {
   const [currentActiveViewDate, setCurrentActiveViewDate] = useState(
-    new Date()
+    new Date(),
   );
   const [currentHijriDate, setCurrentHijriDate] = useState(() =>
-    getHijriDate(new Date())
+    getHijriDate(new Date()),
   );
 
-  const [isHijri, setIsHijri] = useState(lang === "ar");
+  const [isHijri, setIsHijri] = useState(lang === 'ar');
 
-  const localeToUse = useMemo(() => (lang === "ar" ? arSA : enUS), [lang]);
+  const localeToUse = useMemo(() => (lang === 'ar' ? arSA : enUS), [lang]);
 
   const handleDateClick = (date: Date) => {
-    const formattedDate = format(date, "yyyyMMdd");
+    const formattedDate = format(date, 'yyyyMMdd');
     const isAvailable =
       availableDatesInfo?.find((item) => item.date === formattedDate)
-        ?.dateStatus === "Available";
+        ?.dateStatus === 'Available';
     if (isAvailable) {
       setSelectedDate(formattedDate);
     }
@@ -99,14 +99,14 @@ export const useManageCalendar = (
 
   const getCurrentMonthYearText = () => {
     if (isHijri) {
-      const monthNames = lang === "ar" ? hijriMonthsAr : hijriMonthsEn;
+      const monthNames = lang === 'ar' ? hijriMonthsAr : hijriMonthsEn;
       return {
         month: monthNames[currentHijriDate.month],
         year: currentHijriDate.year.toString(),
       };
     }
     return {
-      month: format(currentActiveViewDate, "MMMM"),
+      month: format(currentActiveViewDate, 'MMMM'),
       year: getYear(currentActiveViewDate).toString(),
     };
   };
@@ -115,7 +115,7 @@ export const useManageCalendar = (
   const days = getDaysInMonthArray(
     isHijri,
     currentActiveViewDate,
-    currentHijriDate
+    currentHijriDate,
   );
   for (let i = 0; i < days.length; i += 7) {
     weeks.push(days.slice(i, i + 7));
@@ -126,7 +126,7 @@ export const useManageCalendar = (
   const baseSunday = setDay(anyDate, 0);
   const weekdayNames = Array.from({ length: 7 }).map(
     (_, i) =>
-      format(addDays(baseSunday, i), localeToUse === enUS ? "EE" : "EEEE")
+      format(addDays(baseSunday, i), localeToUse === enUS ? 'EE' : 'EEEE'),
 
     // TODO: ..
     // format(addDays(baseSunday, i), localeToUse === enUS ? "EE" : "EEEE", {
