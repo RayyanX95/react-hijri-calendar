@@ -26,10 +26,8 @@ function DemoApp() {
         setSelectedDate={setSelectedDate}
         availableDatesInfo={mockAvailableDates}
         lang="en"
-        style={{
-          "--calendar-primary": "#ff6600", // Your custom primary color
-          "--calendar-unavailable": "#999999", // Your custom unavailable color
-        }}
+        primaryColor="#ff6600"
+        unavailableColor="#999999"
       />
       <div style={{ marginTop: 16 }}>
         <b>Selected Date:</b> {selectedDate ? String(selectedDate) : "None"}

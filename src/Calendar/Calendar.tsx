@@ -44,11 +44,15 @@ interface CalendarProps {
   /** Optional: Style overrides */
   className?: string;
   /** Optional: Style overrides for the main calendar container, including CSS variables for theming */
-  style?: React.CSSProperties & Record<string, any>;
+  style?: React.CSSProperties;
   /** Optional: Style overrides for day cells */
   dayCellStyle?: React.CSSProperties;
   /** Optional: Class name for day cells */
   dayCellClassName?: string;
+  /** Primary color for calendar (overrides default) */
+  primaryColor?: string;
+  /** Unavailable color for calendar (overrides default) */
+  unavailableColor?: string;
 }
 
 /**
@@ -65,6 +69,8 @@ interface CalendarProps {
  *   style={{ '--calendar-primary': '#ff6600', '--calendar-unavailable': '#999999' }}
  * @param {object} [props.dayCellStyle] - Optional style for day cells
  * @param {string} [props.dayCellClassName] - Optional className for day cells
+ * @param {string} [props.primaryColor] - Primary color for calendar (overrides default)
+ * @param {string} [props.unavailableColor] - Unavailable color for calendar (overrides default)
  * @returns {JSX.Element} Calendar component
  *
  * ## Customizing Appearance and Colors
@@ -96,6 +102,8 @@ export const Calendar = ({
   style,
   dayCellStyle,
   dayCellClassName,
+  primaryColor = "#1b8354",
+  unavailableColor = "#6c737f",
 }: CalendarProps): JSX.Element => {
   const labels = LABELS[lang] || LABELS.en;
   const {
@@ -122,10 +130,10 @@ export const Calendar = ({
     </button>
   );
 
-  // Merge default CSS variable values with user style prop
+  // Merge default CSS variable values with user style prop and global props
   const mergedStyle = {
-    "--calendar-primary": "#1b8354",
-    "--calendar-unavailable": "#6c737f",
+    "--calendar-primary": primaryColor,
+    "--calendar-unavailable": unavailableColor,
     ...style,
   } as React.CSSProperties;
 
