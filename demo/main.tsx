@@ -18,14 +18,24 @@ const mockAvailableDates: AvailableDateInfo[] = Array.from(
 
 function DemoApp() {
   const [selectedDate, setSelectedDate] = useState<string | Date | null>(null);
+  const [lang, setLang] = useState<"en" | "ar">("en");
+
+  const toggleLanguage = () => {
+    const currentLang = document.documentElement.lang;
+    document.documentElement.lang = currentLang === "en" ? "ar" : "en";
+    document.documentElement.dir = currentLang === "en" ? "rtl" : "ltr";
+
+    setLang(currentLang === "en" ? "ar" : "en");
+  };
   return (
     <div style={{ maxWidth: 1200, margin: "2rem auto", padding: "0 1rem" }}>
+      <button onClick={toggleLanguage}>Toggle Language</button>
       <h2>Calendar Demo</h2>
       <Calendar
         selectedDate={selectedDate}
         setSelectedDate={setSelectedDate}
         availableDatesInfo={mockAvailableDates}
-        lang="en"
+        lang={lang}
         primaryColor="#ff6600"
         unavailableColor="#999999"
       />
