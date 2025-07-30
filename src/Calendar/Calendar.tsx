@@ -164,11 +164,11 @@ export const Calendar = ({
             {weeks.map((week, weekIndex) => (
               <tr key={weekIndex}>
                 {week.map((date, dateIndex) => {
-                  const isSelectedDate = selectedDate
-                    ? typeof selectedDate === "string"
-                      ? isSameDay(date, parse(selectedDate))
-                      : isSameDay(date, selectedDate)
-                    : false;
+                  let isSelectedDate = false;
+                  if (selectedDate) {
+                    const formatedDate = format(date, "yyyyMMdd");
+                    isSelectedDate = formatedDate === selectedDate;
+                  }
                   const isAvailable =
                     availableDatesInfo?.find(
                       (item) => item.date === format(date, "yyyyMMdd")
@@ -199,6 +199,7 @@ export const Calendar = ({
                       leaveStatement,
                     });
                   }
+
                   return (
                     <TableCell
                       key={dateIndex}
