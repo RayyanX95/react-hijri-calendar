@@ -1,10 +1,10 @@
-# React Dual Calendar
+# React Hijri and Gregorian Calendar
 
 A pluggable React calendar component supporting both Hijri and Gregorian dates, theming, and custom rendering.
 
 ## Features
 
-- Dual calendar: Hijri and Gregorian
+- Hijri and Gregorian Calendar
 - RTL/LTR and Arabic/English support
 - Theming and style overrides
 - Custom day cell rendering

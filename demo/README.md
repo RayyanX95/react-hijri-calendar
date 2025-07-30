@@ -1,4 +1,4 @@
-# Demo for React Dual Calendar
+# Demo for React Hijri and Gregorian Calendar
 
 This demo uses Vite to showcase the features of the `react-hijri-calendar` component.
 
