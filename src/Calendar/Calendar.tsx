@@ -1,22 +1,22 @@
-import { format, isToday } from "date-fns";
-import styles from "./Calendar.module.css";
-import { useManageCalendar } from "./useManageCalendar";
-import { getHijriDate } from "./utils";
+import { format, isToday } from 'date-fns';
+import styles from './Calendar.module.css';
+import { useManageCalendar } from './useManageCalendar';
+import { getHijriDate } from './utils';
 
-import { JSX } from "react";
-import { AvailableDateInfo, SetSelectedDateFunc } from "./types";
-import { ChevronRightIcon, ChevronLeftIcon } from "./icons";
+import { JSX } from 'react';
+import { AvailableDateInfo, SetSelectedDateFunc } from './types';
+import { ChevronRightIcon, ChevronLeftIcon } from './icons';
 
 const LABELS = {
   en: {
-    hijri: "Hijri",
-    gregorian: "Gregorian",
-    weekdays: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+    hijri: 'Hijri',
+    gregorian: 'Gregorian',
+    weekdays: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
   },
   ar: {
-    hijri: "هجري",
-    gregorian: "ميلادي",
-    weekdays: ["أحد", "اثنين", "ثلاثاء", "أربعاء", "خميس", "جمعة", "سبت"],
+    hijri: 'هجري',
+    gregorian: 'ميلادي',
+    weekdays: ['أحد', 'اثنين', 'ثلاثاء', 'أربعاء', 'خميس', 'جمعة', 'سبت'],
   },
 };
 
@@ -30,7 +30,7 @@ interface CalendarProps {
   /** Loading state of the calendar */
   isLoading?: boolean;
   /** Language for labels ("en" or "ar") */
-  lang?: "en" | "ar";
+  lang?: 'en' | 'ar';
   /** Optional: Custom day cell renderer */
   renderDayCell?: (params: {
     date: Date;
@@ -96,14 +96,14 @@ export const Calendar = ({
   setSelectedDate,
   availableDatesInfo,
   isLoading,
-  lang = "en",
+  lang = 'en',
   renderDayCell,
   className,
   style,
   dayCellStyle,
   dayCellClassName,
-  primaryColor = "#1b8354",
-  unavailableColor = "#6c737f",
+  primaryColor = '#1b8354',
+  unavailableColor = '#6c737f',
 }: CalendarProps): JSX.Element => {
   const labels = LABELS[lang] || LABELS.en;
   const {
@@ -120,22 +120,22 @@ export const Calendar = ({
 
   const weekDays = labels.weekdays;
 
-  const renderChevronIcon = (action: "prev" | "next") => {
-    const isRtl = lang === "ar";
+  const renderChevronIcon = (action: 'prev' | 'next') => {
+    const isRtl = lang === 'ar';
     // In RTL, swap the icons for prev/next
     const Icon =
-      action === "prev"
+      action === 'prev'
         ? isRtl
           ? ChevronRightIcon
           : ChevronLeftIcon
         : isRtl
-        ? ChevronLeftIcon
-        : ChevronRightIcon;
+          ? ChevronLeftIcon
+          : ChevronRightIcon;
     return (
       <button
         className={styles.chevronButton}
         type="button"
-        onClick={action === "prev" ? goToPreviousMonth : goToNextMonth}
+        onClick={action === 'prev' ? goToPreviousMonth : goToNextMonth}
       >
         <Icon />
       </button>
@@ -144,14 +144,14 @@ export const Calendar = ({
 
   // Merge default CSS variable values with user style prop and global props
   const mergedStyle = {
-    "--calendar-primary": primaryColor,
-    "--calendar-unavailable": unavailableColor,
+    '--calendar-primary': primaryColor,
+    '--calendar-unavailable': unavailableColor,
     ...style,
   } as React.CSSProperties;
 
   return (
     <div
-      className={`${styles.calendarContainer} ${className || ""}`}
+      className={`${styles.calendarContainer} ${className || ''}`}
       style={mergedStyle}
     >
       <div className={styles.header}>
@@ -164,8 +164,8 @@ export const Calendar = ({
             {isHijri ? labels.gregorian : labels.hijri}
           </button>
           <span className={styles.chevronContainer}>
-            {renderChevronIcon("prev")}
-            {renderChevronIcon("next")}
+            {renderChevronIcon('prev')}
+            {renderChevronIcon('next')}
           </span>
         </div>
       </div>
@@ -186,23 +186,23 @@ export const Calendar = ({
                 {week.map((date, dateIndex) => {
                   let isSelectedDate = false;
                   if (selectedDate) {
-                    const formatedDate = format(date, "yyyyMMdd");
+                    const formatedDate = format(date, 'yyyyMMdd');
                     isSelectedDate = formatedDate === selectedDate;
                   }
                   const isAvailable =
                     availableDatesInfo?.find(
-                      (item) => item.date === format(date, "yyyyMMdd")
-                    )?.dateStatus === "Available";
+                      (item) => item.date === format(date, 'yyyyMMdd'),
+                    )?.dateStatus === 'Available';
                   const isCurrentDay = isToday(date);
                   const hijriDate = getHijriDate(date);
                   const leaveStatement = availableDatesInfo?.find(
-                    (item) => item.date === format(date, "yyyyMMdd")
+                    (item) => item.date === format(date, 'yyyyMMdd'),
                   )?.leaveStatement;
                   const isCurrentMonthDate = isHijri
                     ? hijriDate.month === currentHijriDate.month &&
                       hijriDate.year === currentHijriDate.year
-                    : format(date, "yyyy-MM") ===
-                      format(currentActiveViewDate, "yyyy-MM");
+                    : format(date, 'yyyy-MM') ===
+                      format(currentActiveViewDate, 'yyyy-MM');
 
                   if (renderDayCell) {
                     return renderDayCell({
@@ -221,22 +221,22 @@ export const Calendar = ({
                       key={dateIndex}
                       className={[
                         styles.tableCell,
-                        isSelectedDate ? styles.selected : "",
-                        isCurrentDay ? styles.currentDay : "",
+                        isSelectedDate ? styles.selected : '',
+                        isCurrentDay ? styles.currentDay : '',
                         isAvailable ? styles.available : styles.unavailable,
                         isCurrentMonthDate
                           ? styles.currentMonth
                           : styles.notCurrentMonth,
-                        dayCellClassName || "",
-                      ].join(" ")}
+                        dayCellClassName || '',
+                      ].join(' ')}
                       style={dayCellStyle}
                       onClick={() => handleDateClick(date)}
                     >
                       <div className={styles.cellContent}>
                         <div className={styles.dayContainer}>
                           {isHijri
-                            ? String(hijriDate.day ?? "")
-                            : format(date, "d")}
+                            ? String(hijriDate.day ?? '')
+                            : format(date, 'd')}
                         </div>
                       </div>
                     </td>
@@ -251,4 +251,4 @@ export const Calendar = ({
   );
 };
 
-Calendar.displayName = "Calendar";
+Calendar.displayName = 'Calendar';

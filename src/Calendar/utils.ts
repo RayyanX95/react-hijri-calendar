@@ -5,11 +5,11 @@ import {
   getDaysInMonth,
   startOfMonth,
   subDays,
-} from "date-fns";
-import moment from "moment-hijri";
+} from 'date-fns';
+import moment from 'moment-hijri';
 
-import { hijriFirstMonthIndex, hijriLastMonthIndex } from "./constants";
-import { HijriDate } from "./types";
+import { hijriFirstMonthIndex, hijriLastMonthIndex } from './constants';
+import { HijriDate } from './types';
 
 export const isFirstHijriMonth = (currentHijriDate: HijriDate) =>
   currentHijriDate.month === hijriFirstMonthIndex;
@@ -22,7 +22,7 @@ const hijriToGregorian = (hijriDate: HijriDate): Date => {
     // moment-hijri expects 1-12 for months
     const hijriMoment = moment(
       `${hijriDate.year}/${hijriDate.month + 1}/${hijriDate.day}`,
-      "iYYYY/iM/iD"
+      'iYYYY/iM/iD',
     );
     return hijriMoment.toDate();
   } catch {
@@ -32,8 +32,8 @@ const hijriToGregorian = (hijriDate: HijriDate): Date => {
 };
 
 export const getHijriDate = (gregorianDate: Date): HijriDate => {
-  const hijriMoment = moment(gregorianDate).format("iYYYY/iM/iD");
-  const [year, month, day] = hijriMoment.split("/").map(Number);
+  const hijriMoment = moment(gregorianDate).format('iYYYY/iM/iD');
+  const [year, month, day] = hijriMoment.split('/').map(Number);
   return {
     day,
     month: month - 1, // moment-hijri uses 1-12, we need 0-11 for array indexing
@@ -52,10 +52,10 @@ const getDaysInHijriMonth = (hijriYear: number, hijriMonth: number): number => {
       hijriMonth === hijriLastMonthIndex ? hijriYear + 1 : hijriYear;
     const firstOfNextMonth = moment(
       `${nextYear}/${nextMonth + 1}/1`,
-      "iYYYY/iM/iD"
+      'iYYYY/iM/iD',
     );
-    const lastOfCurrentMonth = firstOfNextMonth.clone().subtract(1, "day");
-    return Number.parseInt(lastOfCurrentMonth.format("iD"), 10);
+    const lastOfCurrentMonth = firstOfNextMonth.clone().subtract(1, 'day');
+    return Number.parseInt(lastOfCurrentMonth.format('iD'), 10);
   } catch {
     // Fallback - Islamic months are typically 29 or 30 days
     return hijriMonth % 2 === 0 ? 30 : 29;
@@ -66,7 +66,7 @@ const getHijriMonthGrid = (currentHijriDate: HijriDate): Date[] => {
   const days: Date[] = [];
   const daysInMonth = getDaysInHijriMonth(
     currentHijriDate.year,
-    currentHijriDate.month
+    currentHijriDate.month,
   );
 
   // Get the first day of the Hijri month in Gregorian calendar
@@ -86,7 +86,7 @@ const getHijriMonthGrid = (currentHijriDate: HijriDate): Date[] => {
       day:
         getDaysInHijriMonth(
           isFirstMonth ? currentHijriDate.year - 1 : currentHijriDate.year,
-          isFirstMonth ? hijriLastMonthIndex : currentHijriDate.month - 1
+          isFirstMonth ? hijriLastMonthIndex : currentHijriDate.month - 1,
         ) -
         i +
         1,
@@ -152,7 +152,7 @@ const getGregorianGrid = (currentActiveViewDate: Date) => {
 export const getDaysInMonthArray = (
   isHijri: boolean,
   currentActiveViewDate: Date,
-  currentHijriDate: HijriDate
+  currentHijriDate: HijriDate,
 ): Date[] => {
   if (isHijri) {
     return getHijriMonthGrid(currentHijriDate);
