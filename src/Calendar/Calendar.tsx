@@ -3,7 +3,14 @@ import styles from './Calendar.module.css';
 import { useManageCalendar } from './useManageCalendar';
 import { getHijriDate } from './utils';
 
-import { JSX } from 'react';
+import React, {
+  CSSProperties,
+  JSX,
+  KeyboardEvent,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import { AvailableDateInfo, SetSelectedDateFunc } from './types';
 import { ChevronRightIcon, ChevronLeftIcon } from './icons';
 
@@ -44,9 +51,9 @@ interface CalendarProps {
   /** Optional: Style overrides */
   className?: string;
   /** Optional: Style overrides for the main calendar container, including CSS variables for theming */
-  style?: React.CSSProperties;
+  style?: CSSProperties;
   /** Optional: Style overrides for day cells */
-  dayCellStyle?: React.CSSProperties;
+  dayCellStyle?: CSSProperties;
   /** Optional: Class name for day cells */
   dayCellClassName?: string;
   /** Primary color for calendar (overrides default) */
@@ -147,12 +154,66 @@ export const Calendar = ({
     '--calendar-primary': primaryColor,
     '--calendar-unavailable': unavailableColor,
     ...style,
-  } as React.CSSProperties;
+  } as CSSProperties;
+
+  // Accessibility: manage focus for keyboard navigation
+  const tableRef = useRef<HTMLTableElement>(null);
+  const [focusedCell, setFocusedCell] = useState<{
+    row: number;
+    col: number;
+  } | null>(null);
+
+  // Find the first available date for initial focus
+  useEffect(() => {
+    if (!focusedCell && weeks.length > 0) {
+      for (let row = 0; row < weeks.length; row++) {
+        for (let col = 0; col < weeks[row].length; col++) {
+          const date = weeks[row][col];
+          const isAvailable =
+            availableDatesInfo?.find(
+              (item) => item.date === format(date, 'yyyyMMdd'),
+            )?.dateStatus === 'Available';
+          if (isAvailable) {
+            setFocusedCell({ row, col });
+            return;
+          }
+        }
+      }
+    }
+  }, [weeks, availableDatesInfo, focusedCell]);
+
+  // Keyboard navigation handler
+  const handleKeyDown = (e: KeyboardEvent<HTMLTableElement>) => {
+    if (!focusedCell) return;
+    const { row, col } = focusedCell;
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      if (row < weeks.length - 1) setFocusedCell({ row: row + 1, col });
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      if (row > 0) setFocusedCell({ row: row - 1, col });
+    } else if (e.key === 'ArrowRight') {
+      e.preventDefault();
+      if (col < weeks[row].length - 1) setFocusedCell({ row, col: col + 1 });
+    } else if (e.key === 'ArrowLeft') {
+      e.preventDefault();
+      if (col > 0) setFocusedCell({ row, col: col - 1 });
+    } else if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      const date = weeks[row][col];
+      handleDateClick(date);
+    } else if (e.key === 'Escape') {
+      e.preventDefault();
+      (tableRef.current as any)?.blur();
+    }
+  };
 
   return (
     <div
       className={`${styles.calendarContainer} ${className || ''}`}
       style={mergedStyle}
+      role="region"
+      aria-label="Calendar"
     >
       <div className={styles.header}>
         <div className={styles.monthYearText}>
@@ -160,7 +221,11 @@ export const Calendar = ({
           <span>{currentMonthYear.year}</span>
         </div>
         <div className={styles.actionsContainer}>
-          <button className={styles.toggleButton} onClick={toggleHijri}>
+          <button
+            className={styles.toggleButton}
+            onClick={toggleHijri}
+            aria-label="Toggle calendar type"
+          >
             {isHijri ? labels.gregorian : labels.hijri}
           </button>
           <span className={styles.chevronContainer}>
@@ -170,11 +235,23 @@ export const Calendar = ({
         </div>
       </div>
       <div className={styles.tableContainer}>
-        <table className={styles.table}>
+        <table
+          className={styles.table}
+          ref={tableRef}
+          tabIndex={0}
+          role="grid"
+          aria-label="Date picker grid"
+          onKeyDown={handleKeyDown}
+        >
           <thead>
             <tr>
               {weekDays.map((day, index) => (
-                <th className={styles.tableHeader} key={index}>
+                <th
+                  className={styles.tableHeader}
+                  key={index}
+                  role="columnheader"
+                  scope="col"
+                >
                   {day}
                 </th>
               ))}
@@ -182,7 +259,7 @@ export const Calendar = ({
           </thead>
           <tbody>
             {weeks.map((week, weekIndex) => (
-              <tr key={weekIndex}>
+              <tr key={weekIndex} role="row">
                 {week.map((date, dateIndex) => {
                   let isSelectedDate = false;
                   if (selectedDate) {
@@ -216,6 +293,17 @@ export const Calendar = ({
                     });
                   }
 
+                  // Accessibility: set focus and ARIA attributes
+                  const isFocused =
+                    focusedCell &&
+                    focusedCell.row === weekIndex &&
+                    focusedCell.col === dateIndex;
+                  // Use a callback ref that only focuses when mounted and focused
+                  const cellRef = (el: HTMLTableDataCellElement | null) => {
+                    if (isFocused && el) {
+                      el.focus();
+                    }
+                  };
                   return (
                     <td
                       key={dateIndex}
@@ -231,6 +319,11 @@ export const Calendar = ({
                       ].join(' ')}
                       style={dayCellStyle}
                       onClick={() => handleDateClick(date)}
+                      role="gridcell"
+                      aria-selected={isSelectedDate}
+                      aria-disabled={!isAvailable}
+                      tabIndex={isFocused ? 0 : -1}
+                      ref={isFocused ? cellRef : undefined}
                     >
                       <div className={styles.cellContent}>
                         <div className={styles.dayContainer}>
