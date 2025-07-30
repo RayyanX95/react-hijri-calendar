@@ -57,6 +57,12 @@ interface CalendarProps {
   }) => JSX.Element;
   /** Optional: Style overrides */
   className?: string;
+  /** Optional: Style overrides for the main calendar container */
+  style?: React.CSSProperties;
+  /** Optional: Style overrides for day cells */
+  dayCellStyle?: React.CSSProperties;
+  /** Optional: Class name for day cells */
+  dayCellClassName?: string;
 }
 
 /**
@@ -69,7 +75,24 @@ interface CalendarProps {
  * @param {"en"|"ar"} [props.lang] - Language for labels
  * @param {function} [props.renderDayCell] - Custom day cell renderer
  * @param {string} [props.className] - Optional className for style overrides
+ * @param {object} [props.style] - Optional style for main calendar container
+ * @param {object} [props.dayCellStyle] - Optional style for day cells
+ * @param {string} [props.dayCellClassName] - Optional className for day cells
  * @returns {JSX.Element} Calendar component
+ *
+ * ## Customizing Appearance
+ *
+ * You can override styles using the `className`, `style`, `dayCellStyle`, and `dayCellClassName` props:
+ *
+ * ```tsx
+ * <Calendar
+ *   className="my-calendar"
+ *   style={{ background: '#f0f0f0' }}
+ *   dayCellStyle={{ borderRadius: 8 }}
+ *   dayCellClassName="my-day-cell"
+ *   ...
+ * />
+ * ```
  */
 export const Calendar = ({
   selectedDate,
@@ -79,6 +102,9 @@ export const Calendar = ({
   lang = "en",
   renderDayCell,
   className,
+  style,
+  dayCellStyle,
+  dayCellClassName,
 }: CalendarProps): JSX.Element => {
   const labels = LABELS[lang] || LABELS.en;
 
@@ -109,7 +135,7 @@ export const Calendar = ({
   );
 
   return (
-    <CalendarContainer className={className || "text-xs-regular"}>
+    <CalendarContainer className={className || "text-xs-regular"} style={style}>
       <Header>
         <MonthYearText>
           <span>{currentMonthYear.month}</span>
@@ -173,7 +199,6 @@ export const Calendar = ({
                       leaveStatement,
                     });
                   }
-
                   return (
                     <TableCell
                       key={dateIndex}
@@ -182,6 +207,8 @@ export const Calendar = ({
                       $isCurrentMonth={isCurrentMonthDate}
                       $isSelected={isSelectedDate}
                       onClick={() => handleDateClick(date)}
+                      style={dayCellStyle}
+                      className={dayCellClassName}
                     >
                       <CellContent>
                         <DayContainer $isCurrentMonth={isCurrentMonthDate}>
