@@ -269,18 +269,6 @@ export const Calendar = ({
                     : format(date, 'yyyy-MM') ===
                       format(currentActiveViewDate, 'yyyy-MM');
 
-                  if (renderDayCell) {
-                    return renderDayCell({
-                      date,
-                      isSelected: isSelectedDate,
-                      isAvailable,
-                      isCurrentDay,
-                      isCurrentMonth: isCurrentMonthDate,
-                      hijriDate,
-                      leaveStatement,
-                    });
-                  }
-
                   // Accessibility: set focus and ARIA attributes
                   const isFocused =
                     focusedCell &&
@@ -313,13 +301,27 @@ export const Calendar = ({
                       tabIndex={isFocused ? 0 : -1}
                       ref={isFocused ? cellRef : undefined}
                     >
-                      <div className={styles.cellContent}>
-                        <div className={styles.dayContainer}>
-                          {isHijri
-                            ? String(hijriDate.day ?? '')
-                            : format(date, 'd')}
+                      {renderDayCell ? (
+                        <>
+                          {renderDayCell({
+                            date,
+                            isSelected: isSelectedDate,
+                            isAvailable,
+                            isCurrentDay,
+                            isCurrentMonth: isCurrentMonthDate,
+                            hijriDate,
+                            leaveStatement,
+                          })}
+                        </>
+                      ) : (
+                        <div className={styles.cellContent}>
+                          <div className={styles.dayContainer}>
+                            {isHijri
+                              ? String(hijriDate.day ?? '')
+                              : format(date, 'd')}
+                          </div>
                         </div>
-                      </div>
+                      )}
                     </td>
                   );
                 })}
