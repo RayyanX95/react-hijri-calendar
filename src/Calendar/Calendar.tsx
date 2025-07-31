@@ -1,20 +1,14 @@
-import { format, isToday } from 'date-fns';
+import { useEffect, useRef, useState } from 'react';
+import { format, isToday, isSameDay } from 'date-fns';
+
 import styles from './Calendar.module.css';
+import { LABELS } from './i18n';
+import { ChevronRightIcon, ChevronLeftIcon } from './icons';
 import { useManageCalendar } from './useManageCalendar';
 import { getHijriDate } from './utils';
 
-import React, {
-  CSSProperties,
-  JSX,
-  KeyboardEvent,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
-import { AvailableDateInfo, SetSelectedDateFunc } from './types';
-import { ChevronRightIcon, ChevronLeftIcon } from './icons';
-import { LABELS } from './i18n';
-import { isSameDay } from 'date-fns';
+import type { AvailableDateInfo, SetSelectedDateFunc } from './types';
+import type { CSSProperties, JSX, KeyboardEvent } from 'react';
 
 type CalendarMode = 'allAvailable' | 'customAvailable';
 
@@ -109,15 +103,15 @@ export const Calendar = ({
   unavailableColor = '#6c737f',
 }: CalendarProps): JSX.Element => {
   // Validate props based on mode
-  if (mode === 'customAvailable') {
-    if (!Array.isArray(availableDatesInfo) || availableDatesInfo.length === 0) {
-      if (process.env.NODE_ENV !== 'production') {
-        // eslint-disable-next-line no-console
-        console.warn(
-          '[Calendar] In customAvailable mode, availableDatesInfo should be a non-empty array. All days will be unavailable.',
-        );
-      }
-    }
+  if (
+    mode === 'customAvailable' &&
+    (!Array.isArray(availableDatesInfo) || availableDatesInfo.length === 0) &&
+    process.env.NODE_ENV !== 'production'
+  ) {
+    // eslint-disable-next-line no-console -- Warn if availableDatesInfo is not provided
+    console.warn(
+      '[Calendar] In customAvailable mode, availableDatesInfo should be a non-empty array. All days will be unavailable.',
+    );
   }
   const labels = LABELS[lang] || LABELS.en;
   // Determine initial calendar type: explicit prop, else fallback to lang
@@ -133,7 +127,7 @@ export const Calendar = ({
     handleDateClick,
     goToPreviousMonth,
     goToNextMonth,
-    toggleHijri,
+    toggleHijri: handleToggleHijri,
     isHijri,
     currentHijriDate,
     currentActiveViewDate,
@@ -146,6 +140,14 @@ export const Calendar = ({
   );
 
   const weekDays = labels.weekdays;
+
+  const handleClickChevron = (action: 'prev' | 'next') => {
+    if (action === 'prev') {
+      goToPreviousMonth();
+    } else {
+      goToNextMonth();
+    }
+  };
 
   const renderChevronIcon = (action: 'prev' | 'next') => {
     const isRtl = lang === 'ar';
@@ -162,7 +164,7 @@ export const Calendar = ({
       <button
         className={styles.chevronButton}
         type="button"
-        onClick={action === 'prev' ? goToPreviousMonth : goToNextMonth}
+        onClick={() => handleClickChevron(action)}
       >
         <Icon />
       </button>
@@ -186,9 +188,9 @@ export const Calendar = ({
   // Find the first available date for initial focus
   useEffect(() => {
     if (!focusedCell && weeks.length > 0) {
-      for (let row = 0; row < weeks.length; row++) {
-        for (let col = 0; col < weeks[row].length; col++) {
-          const date = weeks[row][col];
+      // @ts-expect-error - focusedCell is null initially
+      for (const [row, week] of weeks.entries()) {
+        for (const [col, date] of week.entries()) {
           const isAvailable =
             mode === 'allAvailable'
               ? true
@@ -208,34 +210,57 @@ export const Calendar = ({
   const handleKeyDown = (e: KeyboardEvent<HTMLTableElement>) => {
     if (!focusedCell) return;
     const { row, col } = focusedCell;
-    if (e.key === 'ArrowDown') {
-      e.preventDefault();
-      if (row < weeks.length - 1) setFocusedCell({ row: row + 1, col });
-    } else if (e.key === 'ArrowUp') {
-      e.preventDefault();
-      if (row > 0) setFocusedCell({ row: row - 1, col });
-    } else if (e.key === 'ArrowRight') {
-      e.preventDefault();
-      if (col < weeks[row].length - 1) setFocusedCell({ row, col: col + 1 });
-    } else if (e.key === 'ArrowLeft') {
-      e.preventDefault();
-      if (col > 0) setFocusedCell({ row, col: col - 1 });
-    } else if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      const date = weeks[row][col];
-      handleDateClick(date);
-    } else if (e.key === 'Escape') {
-      e.preventDefault();
-      (tableRef.current as any)?.blur();
+    switch (e.key) {
+      case 'ArrowDown': {
+        e.preventDefault();
+        if (row < weeks.length - 1) setFocusedCell({ row: row + 1, col });
+
+        break;
+      }
+      case 'ArrowUp': {
+        e.preventDefault();
+        if (row > 0) setFocusedCell({ row: row - 1, col });
+
+        break;
+      }
+      case 'ArrowRight': {
+        e.preventDefault();
+        if (col < weeks[row].length - 1) setFocusedCell({ row, col: col + 1 });
+
+        break;
+      }
+      case 'ArrowLeft': {
+        e.preventDefault();
+        if (col > 0) setFocusedCell({ row, col: col - 1 });
+
+        break;
+      }
+      case 'Enter':
+      case ' ': {
+        e.preventDefault();
+        const date = weeks[row][col];
+        handleDateClick(date);
+
+        break;
+      }
+      case 'Escape': {
+        e.preventDefault();
+        tableRef.current?.blur();
+
+        break;
+      }
+      default: {
+        break;
+      }
     }
   };
 
   return (
     <div
-      className={`${styles.calendarContainer} ${className || ''}`}
-      style={mergedStyle}
-      role="region"
       aria-label="Calendar"
+      className={`${styles.calendarContainer} ${className || ''}`}
+      role="region"
+      style={mergedStyle}
     >
       <div className={styles.header}>
         <div className={styles.monthYearText}>
@@ -244,9 +269,9 @@ export const Calendar = ({
         </div>
         <div className={styles.actionsContainer}>
           <button
-            className={styles.toggleButton}
-            onClick={toggleHijri}
             aria-label="Toggle calendar type"
+            className={styles.toggleButton}
+            onClick={handleToggleHijri}
           >
             {isHijri ? labels.gregorian : labels.hijri}
           </button>
@@ -258,19 +283,19 @@ export const Calendar = ({
       </div>
       <div className={styles.tableContainer}>
         <table
-          className={styles.table}
           ref={tableRef}
-          tabIndex={0}
-          role="grid"
           aria-label="Date picker grid"
+          className={styles.table}
+          role="grid"
+          tabIndex={0}
           onKeyDown={handleKeyDown}
         >
           <thead>
             <tr>
               {weekDays.map((day, index) => (
                 <th
-                  className={styles.tableHeader}
                   key={index}
+                  className={styles.tableHeader}
                   role="columnheader"
                   scope="col"
                 >
@@ -324,6 +349,9 @@ export const Calendar = ({
                   return (
                     <td
                       key={dateIndex}
+                      ref={isFocused ? cellRef : undefined}
+                      aria-disabled={!isAvailable}
+                      aria-selected={isSelectedDate}
                       className={[
                         styles.tableCell,
                         isCurrentDay ? styles.currentDay : '',
@@ -332,13 +360,10 @@ export const Calendar = ({
                           : styles.notCurrentMonth,
                         dayCellClassName || '',
                       ].join(' ')}
-                      style={dayCellStyle}
-                      onClick={() => handleDateClick(date)}
                       role="gridcell"
-                      aria-selected={isSelectedDate}
-                      aria-disabled={!isAvailable}
+                      style={dayCellStyle}
                       tabIndex={isFocused ? 0 : -1}
-                      ref={isFocused ? cellRef : undefined}
+                      onClick={() => handleDateClick(date)}
                     >
                       {renderDayCell ? (
                         <>
