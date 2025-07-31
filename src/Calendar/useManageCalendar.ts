@@ -21,7 +21,8 @@ import {
   isFirstHijriMonth,
   isLastHijriMonth,
 } from './utils';
-import { AvailableDateInfo, SetSelectedDateFunc } from './types';
+
+import type { AvailableDateInfo, SetSelectedDateFunc } from './types';
 
 export const useManageCalendar = (
   availableDatesInfo: AvailableDateInfo[] | null,
@@ -47,7 +48,6 @@ export const useManageCalendar = (
     }
 
     const formattedDate = format(date, 'yyyyMMdd');
-    debugger;
     const isAvailable =
       availableDatesInfo?.find((item) => item.date === formattedDate)
         ?.isAvailable === true;

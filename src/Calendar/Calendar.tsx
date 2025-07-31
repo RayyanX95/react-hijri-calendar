@@ -312,20 +312,12 @@ export const Calendar = ({
                     ? isSameDay(date, selectedDate)
                     : false;
 
-                  let isAvailable: boolean;
-                  let leaveStatement: string | undefined;
-                  if (mode === 'allAvailable') {
-                    isAvailable = true;
-                    leaveStatement = undefined;
-                  } else {
-                    isAvailable =
-                      availableDatesInfo?.find(
-                        (item) => item.date === format(date, 'yyyyMMdd'),
-                      )?.isAvailable === true;
-                    leaveStatement = availableDatesInfo?.find(
-                      (item) => item.date === format(date, 'yyyyMMdd'),
-                    )?.leaveStatement;
-                  }
+                  const isAvailable =
+                    mode === 'allAvailable'
+                      ? true
+                      : availableDatesInfo?.find(
+                          (item) => item.date === format(date, 'yyyyMMdd'),
+                        )?.isAvailable === true;
 
                   const isCurrentDay = isToday(date);
                   const hijriDate = getHijriDate(date);
@@ -374,7 +366,6 @@ export const Calendar = ({
                             isCurrentDay,
                             isCurrentMonth: isCurrentMonthDate,
                             hijriDate,
-                            leaveStatement,
                           })}
                         </>
                       ) : (

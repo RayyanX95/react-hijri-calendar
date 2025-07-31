@@ -1,16 +1,16 @@
 /// <reference types="@testing-library/jest-dom" />
-import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
+
 import { Calendar } from '../Calendar/Calendar';
 
 describe('Calendar', () => {
   it('renders in English (LTR) mode', () => {
     const { getByText } = render(
       <Calendar
-        selectedDate={null}
-        setSelectedDate={() => {}}
         availableDatesInfo={[]}
         lang="en"
+        selectedDate={null}
+        setSelectedDate={() => {}}
       />,
     );
     expect(getByText('Hijri')).toBeInTheDocument();
@@ -20,10 +20,10 @@ describe('Calendar', () => {
   it('renders in Arabic (RTL) mode', () => {
     const { getByText } = render(
       <Calendar
-        selectedDate={null}
-        setSelectedDate={() => {}}
         availableDatesInfo={[]}
         lang="ar"
+        selectedDate={null}
+        setSelectedDate={() => {}}
       />,
     );
 
@@ -35,14 +35,18 @@ describe('Calendar', () => {
     const mockSetSelectedDate = jest.fn();
     // 2025-07-30 is a Wednesday
     const availableDatesInfo = [
-      { date: '20250730', dateStatus: 'Available', leaveStatement: '' },
+      {
+        date: '20250730',
+        dateStatus: 'Available',
+        isAvailable: true,
+      },
     ];
     const { container } = render(
       <Calendar
-        selectedDate={null}
-        setSelectedDate={mockSetSelectedDate}
         availableDatesInfo={availableDatesInfo}
         lang="en"
+        selectedDate={null}
+        setSelectedDate={mockSetSelectedDate}
       />,
     );
     // Find the td for 30 that is available
