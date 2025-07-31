@@ -43,9 +43,9 @@ export const useManageCalendar = (
     const formattedDate = format(date, 'yyyyMMdd');
     const isAvailable =
       availableDatesInfo?.find((item) => item.date === formattedDate)
-        ?.dateStatus === 'Available';
+        ?.isAvailable === true;
     if (isAvailable) {
-      setSelectedDate(formattedDate);
+      setSelectedDate(date);
     }
   };
 

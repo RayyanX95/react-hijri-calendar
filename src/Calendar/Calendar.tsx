@@ -14,16 +14,15 @@ import React, {
 import { AvailableDateInfo, SetSelectedDateFunc } from './types';
 import { ChevronRightIcon, ChevronLeftIcon } from './icons';
 import { LABELS } from './i18n';
+import { isSameDay } from 'date-fns';
 
 interface CalendarProps {
-  /** Currently selected date (string in yyyyMMdd or Date object, or null) */
-  selectedDate: string | Date | null;
+  /** Currently selected date (Date object) */
+  selectedDate: Date | null;
   /** Callback to update selected date */
   setSelectedDate: SetSelectedDateFunc;
   /** Array of date availability information */
   availableDatesInfo: AvailableDateInfo[];
-  /** Loading state of the calendar */
-  isLoading?: boolean;
   /** Language for labels ("en" or "ar") */
   lang?: 'en' | 'ar';
   /** Optional: Custom day cell renderer */
@@ -90,7 +89,6 @@ export const Calendar = ({
   selectedDate,
   setSelectedDate,
   availableDatesInfo,
-  isLoading,
   lang = 'en',
   renderDayCell,
   className,
@@ -160,7 +158,7 @@ export const Calendar = ({
           const isAvailable =
             availableDatesInfo?.find(
               (item) => item.date === format(date, 'yyyyMMdd'),
-            )?.dateStatus === 'Available';
+            )?.isAvailable === true;
           if (isAvailable) {
             setFocusedCell({ row, col });
             return;
@@ -249,15 +247,15 @@ export const Calendar = ({
             {weeks.map((week, weekIndex) => (
               <tr key={weekIndex} role="row">
                 {week.map((date, dateIndex) => {
-                  let isSelectedDate = false;
-                  if (selectedDate) {
-                    const formatedDate = format(date, 'yyyyMMdd');
-                    isSelectedDate = formatedDate === selectedDate;
-                  }
+                  const isSelectedDate = selectedDate
+                    ? isSameDay(date, selectedDate)
+                    : false;
+
                   const isAvailable =
                     availableDatesInfo?.find(
                       (item) => item.date === format(date, 'yyyyMMdd'),
-                    )?.dateStatus === 'Available';
+                    )?.isAvailable === true;
+
                   const isCurrentDay = isToday(date);
                   const hijriDate = getHijriDate(date);
                   const leaveStatement = availableDatesInfo?.find(
