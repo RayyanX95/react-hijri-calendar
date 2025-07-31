@@ -285,9 +285,7 @@ export const Calendar = ({
                       key={dateIndex}
                       className={[
                         styles.tableCell,
-                        isSelectedDate ? styles.selected : '',
                         isCurrentDay ? styles.currentDay : '',
-                        isAvailable ? styles.available : styles.unavailable,
                         isCurrentMonthDate
                           ? styles.currentMonth
                           : styles.notCurrentMonth,
@@ -314,7 +312,13 @@ export const Calendar = ({
                           })}
                         </>
                       ) : (
-                        <div className={styles.cellContent}>
+                        <div
+                          className={[
+                            styles.cellContent,
+                            isSelectedDate ? styles.selected : '',
+                            isAvailable ? styles.available : styles.unavailable,
+                          ].join(' ')}
+                        >
                           <div className={styles.dayContainer}>
                             {isHijri
                               ? String(hijriDate.day ?? '')

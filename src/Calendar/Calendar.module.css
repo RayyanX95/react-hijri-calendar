@@ -1,6 +1,7 @@
 .calendarContainer {
   --calendar-primary: #1b8354;
   --calendar-unavailable: #6c737f;
+  --border-color: #f3f3f3;
   width: 100%;
   background-color: white;
   border-radius: 8px;
@@ -48,12 +49,15 @@
 
 .table {
   min-width: 100%;
-  border: 3px solid #f8f8f8;
+  border: 3px solid var(--border-color);
   background-color: white;
+  /* border-collapse: collapse; */
+  /* table-layout: fixed; */
+  border-collapse: collapse;
+  border-spacing: 0;
 }
 
 .tableHeader {
-  border: 3px solid #f9fafb;
   padding: 4px;
   font-size: 14px;
 }
@@ -65,7 +69,7 @@
 }
 
 .tableCell {
-  border: 2px solid #f9fafb;
+  border: 1px solid var(--border-color);
   text-align: center;
   font-size: 14px;
   font-weight: 600;
@@ -74,11 +78,13 @@
   opacity: 1;
   background-color: white;
   color: inherit;
+  vertical-align: top;
+  padding: 0;
 }
 
 @media (min-width: 768px) {
   .tableCell {
-    border-width: 1px;
+    border-width: 2px;
     font-size: 16px;
   }
 }
@@ -115,7 +121,8 @@
   align-items: center;
   justify-content: center;
   gap: 4px;
-  padding: 18px 10px;
+  padding: 18px 4px;
+  text-align: center ;
 }
 
 @media (min-width: 768px) {
