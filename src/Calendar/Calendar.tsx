@@ -93,7 +93,7 @@ export const Calendar = ({
   selectedDate,
   setSelectedDate,
   availableDatesInfo,
-  mode = 'customAvailable',
+  mode = 'allAvailable',
   lang = 'en',
   renderDayCell,
   className,

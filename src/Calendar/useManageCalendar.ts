@@ -106,7 +106,7 @@ export const useManageCalendar = (
       };
     }
     return {
-      month: format(currentActiveViewDate, 'MMMM', { locale: localeToUse }),
+      month: format(currentActiveViewDate, 'MMMM'),
       year: getYear(currentActiveViewDate).toString(),
     };
   };
