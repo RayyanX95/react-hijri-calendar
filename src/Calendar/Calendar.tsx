@@ -16,13 +16,17 @@ import { ChevronRightIcon, ChevronLeftIcon } from './icons';
 import { LABELS } from './i18n';
 import { isSameDay } from 'date-fns';
 
+type CalendarMode = 'allAvailable' | 'customAvailable';
+
 interface CalendarProps {
   /** Currently selected date (Date object) */
   selectedDate: Date | null;
   /** Callback to update selected date */
   setSelectedDate: SetSelectedDateFunc;
-  /** Array of date availability information */
-  availableDatesInfo: AvailableDateInfo[];
+  /** Array of date availability information (required for customAvailable mode) */
+  availableDatesInfo?: AvailableDateInfo[];
+  /** Calendar selection mode */
+  mode?: CalendarMode; // 'allAvailable' (all days selectable) | 'customAvailable' (only availableDatesInfo)
   /** Language for labels ("en" or "ar") */
   lang?: 'en' | 'ar';
   /** Optional: Custom day cell renderer */
@@ -89,6 +93,7 @@ export const Calendar = ({
   selectedDate,
   setSelectedDate,
   availableDatesInfo,
+  mode = 'customAvailable',
   lang = 'en',
   renderDayCell,
   className,
@@ -98,6 +103,17 @@ export const Calendar = ({
   primaryColor = '#1b8354',
   unavailableColor = '#6c737f',
 }: CalendarProps): JSX.Element => {
+  // Validate props based on mode
+  if (mode === 'customAvailable') {
+    if (!Array.isArray(availableDatesInfo) || availableDatesInfo.length === 0) {
+      if (process.env.NODE_ENV !== 'production') {
+        // eslint-disable-next-line no-console
+        console.warn(
+          '[Calendar] In customAvailable mode, availableDatesInfo should be a non-empty array. All days will be unavailable.',
+        );
+      }
+    }
+  }
   const labels = LABELS[lang] || LABELS.en;
   const {
     weeks,
@@ -109,7 +125,7 @@ export const Calendar = ({
     isHijri,
     currentHijriDate,
     currentActiveViewDate,
-  } = useManageCalendar(availableDatesInfo, setSelectedDate, lang);
+  } = useManageCalendar(availableDatesInfo || [], setSelectedDate, lang);
 
   const weekDays = labels.weekdays;
 
@@ -156,9 +172,11 @@ export const Calendar = ({
         for (let col = 0; col < weeks[row].length; col++) {
           const date = weeks[row][col];
           const isAvailable =
-            availableDatesInfo?.find(
-              (item) => item.date === format(date, 'yyyyMMdd'),
-            )?.isAvailable === true;
+            mode === 'allAvailable'
+              ? true
+              : availableDatesInfo?.find(
+                  (item) => item.date === format(date, 'yyyyMMdd'),
+                )?.isAvailable === true;
           if (isAvailable) {
             setFocusedCell({ row, col });
             return;
@@ -166,7 +184,7 @@ export const Calendar = ({
         }
       }
     }
-  }, [weeks, availableDatesInfo, focusedCell]);
+  }, [weeks, availableDatesInfo, focusedCell, mode]);
 
   // Keyboard navigation handler
   const handleKeyDown = (e: KeyboardEvent<HTMLTableElement>) => {
@@ -251,16 +269,23 @@ export const Calendar = ({
                     ? isSameDay(date, selectedDate)
                     : false;
 
-                  const isAvailable =
-                    availableDatesInfo?.find(
+                  let isAvailable: boolean;
+                  let leaveStatement: string | undefined;
+                  if (mode === 'allAvailable') {
+                    isAvailable = true;
+                    leaveStatement = undefined;
+                  } else {
+                    isAvailable =
+                      availableDatesInfo?.find(
+                        (item) => item.date === format(date, 'yyyyMMdd'),
+                      )?.isAvailable === true;
+                    leaveStatement = availableDatesInfo?.find(
                       (item) => item.date === format(date, 'yyyyMMdd'),
-                    )?.isAvailable === true;
+                    )?.leaveStatement;
+                  }
 
                   const isCurrentDay = isToday(date);
                   const hijriDate = getHijriDate(date);
-                  const leaveStatement = availableDatesInfo?.find(
-                    (item) => item.date === format(date, 'yyyyMMdd'),
-                  )?.leaveStatement;
                   const isCurrentMonthDate = isHijri
                     ? hijriDate.month === currentHijriDate.month &&
                       hijriDate.year === currentHijriDate.year
