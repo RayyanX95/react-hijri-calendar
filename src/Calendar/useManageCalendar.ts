@@ -27,6 +27,7 @@ export const useManageCalendar = (
   availableDatesInfo: AvailableDateInfo[] | null,
   setSelectedDate: SetSelectedDateFunc,
   lang: 'en' | 'ar',
+  initialIsHijri: boolean,
 ) => {
   const [currentActiveViewDate, setCurrentActiveViewDate] = useState(
     new Date(),
@@ -34,8 +35,7 @@ export const useManageCalendar = (
   const [currentHijriDate, setCurrentHijriDate] = useState(() =>
     getHijriDate(new Date()),
   );
-
-  const [isHijri, setIsHijri] = useState(lang === 'ar');
+  const [isHijri, setIsHijri] = useState(initialIsHijri);
 
   const localeToUse = useMemo(() => (lang === 'ar' ? arSA : enUS), [lang]);
 

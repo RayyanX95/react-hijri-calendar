@@ -18,6 +18,8 @@ import { isSameDay } from 'date-fns';
 
 type CalendarMode = 'allAvailable' | 'customAvailable';
 
+type CalendarType = 'hijri' | 'gregorian';
+
 interface CalendarProps {
   /** Currently selected date (Date object) */
   selectedDate: Date | null;
@@ -29,6 +31,8 @@ interface CalendarProps {
   mode?: CalendarMode; // 'allAvailable' (all days selectable) | 'customAvailable' (only availableDatesInfo)
   /** Language for labels ("en" or "ar") */
   lang?: 'en' | 'ar';
+  /** Calendar type: 'hijri' or 'gregorian'. If not provided, falls back to lang ('ar' = hijri, 'en' = gregorian) */
+  calendarType?: CalendarType;
   /** Optional: Custom day cell renderer */
   renderDayCell?: (params: {
     date: Date;
@@ -95,6 +99,7 @@ export const Calendar = ({
   availableDatesInfo,
   mode = 'allAvailable',
   lang = 'en',
+  calendarType,
   renderDayCell,
   className,
   style,
@@ -115,6 +120,13 @@ export const Calendar = ({
     }
   }
   const labels = LABELS[lang] || LABELS.en;
+  // Determine initial calendar type: explicit prop, else fallback to lang
+  const initialIsHijri =
+    calendarType === 'hijri'
+      ? true
+      : calendarType === 'gregorian'
+        ? false
+        : lang === 'ar';
   const {
     weeks,
     currentMonthYear,
@@ -125,7 +137,12 @@ export const Calendar = ({
     isHijri,
     currentHijriDate,
     currentActiveViewDate,
-  } = useManageCalendar(availableDatesInfo || [], setSelectedDate, lang);
+  } = useManageCalendar(
+    availableDatesInfo || [],
+    setSelectedDate,
+    lang,
+    initialIsHijri,
+  );
 
   const weekDays = labels.weekdays;
 

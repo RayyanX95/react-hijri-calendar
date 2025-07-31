@@ -35,6 +35,7 @@ function MyComponent() {
         selectedDate={selectedDate}
         setSelectedDate={setSelectedDate}
         lang="en" // or "ar"
+        // calendarType="hijri" // Uncomment to force Hijri calendar regardless of lang
       />
 
       {/* Only specific dates selectable (customAvailable mode) */}
@@ -59,6 +60,7 @@ function MyComponent() {
 | availableDatesInfo | `AvailableDateInfo[]`                 | Array of date info objects (required for `customAvailable` mode)                                                          |
 | mode               | `'allAvailable' \| 'customAvailable'` | Calendar selection mode. `'allAvailable'` = all days selectable (default), `'customAvailable'` = only availableDatesInfo. |
 | lang               | `'en' \| 'ar'`                        | Language for labels                                                                                                       |
+| calendarType       | `'hijri' \| 'gregorian'`              | Force calendar type. If not provided, falls back to `lang` (`'ar'` = Hijri, `'en'` = Gregorian).                          |
 | renderDayCell      | `function`                            | Custom day cell renderer                                                                                                  |
 | className          | `string`                              | Custom class for main container                                                                                           |
 | style              | `React.CSSProperties`                 | Inline styles for main container (supports CSS variables for theming)                                                     |
@@ -66,6 +68,16 @@ function MyComponent() {
 | dayCellClassName   | `string`                              | Custom class for day cells                                                                                                |
 | primaryColor       | `string`                              | Primary color (overrides default)                                                                                         |
 | unavailableColor   | `string`                              | Unavailable color (overrides default)                                                                                     |
+
+## Calendar Type
+
+The `calendarType` prop allows you to explicitly set the calendar system:
+
+- `calendarType="hijri"` — Always use the Hijri calendar
+- `calendarType="gregorian"` — Always use the Gregorian calendar
+- If not provided, the calendar type falls back to the `lang` prop (`'ar'` = Hijri, `'en'` = Gregorian)
+
+This makes it easy to control the calendar system independently of the language/labels.
 
 ## Modes
 
