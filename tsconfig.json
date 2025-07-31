@@ -19,7 +19,7 @@
     "outDir": "./dist",
     "rootDir": "."
   },
-  "include": ["src", "demo", "jest.config.cjs", "rollup.config.mjs"],
+  "include": ["src", "demo", "jest.config.cjs", "rollup.config.mjs", "jest.setup.ts"],
   "exclude": [
     "node_modules"
     // "**/*.test.ts",
