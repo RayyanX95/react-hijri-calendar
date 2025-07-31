@@ -1,8 +1,8 @@
-type RequiredAvailableDateInfo = {
+interface RequiredAvailableDateInfo {
   date: string; // ISO date string in 'YYYYMMDD' format
   isAvailable: boolean; // Indicates if the date is available
   leaveStatement?: string; // Optional leave statement
-};
+}
 
 export type AvailableDateInfo = RequiredAvailableDateInfo;
 // & Record<string, any>

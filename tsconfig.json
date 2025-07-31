@@ -17,9 +17,9 @@
     "declaration": true,
     "declarationDir": "dist",
     "outDir": "./dist",
-    "rootDir": "./src"
+    "rootDir": "."
   },
-  "include": ["src"],
+  "include": ["src", "demo"],
   "exclude": [
     "node_modules",
     "**/__tests__/**",
