@@ -142,6 +142,7 @@ export const Calendar = ({
     setSelectedDate,
     lang,
     initialIsHijri,
+    mode,
   );
 
   const weekDays = labels.weekdays;

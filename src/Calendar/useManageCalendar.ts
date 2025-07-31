@@ -28,6 +28,7 @@ export const useManageCalendar = (
   setSelectedDate: SetSelectedDateFunc,
   lang: 'en' | 'ar',
   initialIsHijri: boolean,
+  mode: 'allAvailable' | 'customAvailable',
 ) => {
   const [currentActiveViewDate, setCurrentActiveViewDate] = useState(
     new Date(),
@@ -40,7 +41,13 @@ export const useManageCalendar = (
   const localeToUse = useMemo(() => (lang === 'ar' ? arSA : enUS), [lang]);
 
   const handleDateClick = (date: Date) => {
+    if (mode === 'allAvailable') {
+      setSelectedDate(date);
+      return;
+    }
+
     const formattedDate = format(date, 'yyyyMMdd');
+    debugger;
     const isAvailable =
       availableDatesInfo?.find((item) => item.date === formattedDate)
         ?.isAvailable === true;
