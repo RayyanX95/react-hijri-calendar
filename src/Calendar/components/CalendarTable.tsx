@@ -6,7 +6,7 @@ import { getHijriDate } from '../utils';
 
 import { CalendarDayCell } from './CalendarDayCell';
 
-import type { AvailableDateInfo } from '../types';
+import type { AvailableDateInfo, RenderDayCellParams } from '../types';
 import type { CSSProperties, KeyboardEvent, JSX } from 'react';
 
 interface CalendarTableProps {
@@ -20,15 +20,7 @@ interface CalendarTableProps {
   dayCellClassName?: string;
   dayCellStyle?: CSSProperties;
   onDateClick: (date: Date) => void;
-  renderDayCell?: (params: {
-    date: Date;
-    isSelected: boolean;
-    isAvailable: boolean;
-    isCurrentDay: boolean;
-    isCurrentMonth: boolean;
-    hijriDate: ReturnType<typeof getHijriDate>;
-    leaveStatement?: string;
-  }) => JSX.Element;
+  renderDayCell?: (params: RenderDayCellParams) => JSX.Element;
   weekDays: string[];
 }
 
@@ -145,12 +137,14 @@ export const CalendarTable: React.FC<CalendarTableProps> = ({
               const isSelectedDate = selectedDate
                 ? isSameDay(date, selectedDate)
                 : false;
+
+              const availableRowData = availableDatesInfo?.find(
+                (item) => item.date === format(date, 'yyyyMMdd'),
+              );
               const isAvailable =
                 mode === 'allAvailable'
                   ? true
-                  : availableDatesInfo?.find(
-                      (item) => item.date === format(date, 'yyyyMMdd'),
-                    )?.isAvailable === true;
+                  : availableRowData?.isAvailable === true;
               const isCurrentDay = isToday(date);
               const hijriDate = getHijriDate(date);
               const isCurrentMonthDate = isHijri
@@ -162,6 +156,7 @@ export const CalendarTable: React.FC<CalendarTableProps> = ({
               return (
                 <CalendarDayCell
                   key={dateIndex}
+                  availableRowData={availableRowData}
                   currentActiveViewDate={currentActiveViewDate}
                   currentHijriDate={currentHijriDate}
                   date={date}

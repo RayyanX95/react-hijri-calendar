@@ -3,8 +3,11 @@ import { CalendarHeader, CalendarTable } from './components';
 import { LABELS } from './i18n';
 import { useManageCalendar } from './useManageCalendar';
 
-import type { AvailableDateInfo, SetSelectedDateFunc } from './types';
-import type { getHijriDate } from './utils';
+import type {
+  AvailableDateInfo,
+  RenderDayCellParams,
+  SetSelectedDateFunc,
+} from './types';
 import type { CSSProperties, JSX } from 'react';
 
 type CalendarMode = 'allAvailable' | 'customAvailable';
@@ -25,15 +28,8 @@ interface CalendarProps {
   /** Calendar type: 'hijri' or 'gregorian'. If not provided, falls back to lang ('ar' = hijri, 'en' = gregorian) */
   calendarType?: CalendarType;
   /** Optional: Custom day cell renderer */
-  renderDayCell?: (params: {
-    date: Date;
-    isSelected: boolean;
-    isAvailable: boolean;
-    isCurrentDay: boolean;
-    isCurrentMonth: boolean;
-    hijriDate: ReturnType<typeof getHijriDate>;
-    leaveStatement?: string;
-  }) => JSX.Element;
+  renderDayCell?: (params: RenderDayCellParams) => JSX.Element;
+
   /** Optional: Style overrides */
   className?: string;
   /** Optional: Style overrides for the main calendar container, including CSS variables for theming */

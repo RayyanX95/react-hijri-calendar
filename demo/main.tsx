@@ -1,10 +1,12 @@
-/* eslint-disable @typescript-eslint/no-unused-vars --- for testing */
 import { useCallback, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 
 import { Calendar } from '../src/Calendar/Calendar';
 
-import type { AvailableDateInfo } from '../src/Calendar/types';
+import type {
+  AvailableDateInfo,
+  RenderDayCellParams,
+} from '../src/Calendar/types';
 
 const today = new Date();
 const mockAvailableDates: AvailableDateInfo[] = Array.from(
@@ -15,6 +17,9 @@ const mockAvailableDates: AvailableDateInfo[] = Array.from(
       date: date.toISOString().slice(0, 10).replaceAll('-', ''),
       isAvailable: i % 5 !== 0, // Every 5th date is unavailable
       leaveStatement: i % 5 === 0 ? 'On leave' : '',
+      // Add more properties as needed
+      isHalfDay: i % 7 === 0, // Every 7th date is a half day
+      note: i % 3 === 0 ? 'Special event' : '',
     };
   },
 );
@@ -48,21 +53,13 @@ const DemoApp = () => {
     [],
   );
 
-  interface RenderDayCellProps {
-    date: Date;
-    isSelected: boolean;
-    isAvailable: boolean;
-    isCurrentDay: boolean;
-    leaveStatement?: string;
-  }
-
   const renderDayCell = ({
     date,
     isSelected,
     isAvailable,
     isCurrentDay,
-    leaveStatement,
-  }: RenderDayCellProps) => (
+    availableCellData,
+  }: RenderDayCellParams) => (
     <div
       style={{
         backgroundColor:
@@ -72,9 +69,10 @@ const DemoApp = () => {
         color: isSelected ? '#fff' : '#000',
         cursor: isAvailable ? 'pointer' : 'not-allowed',
       }}
+      onClick={() => console.log(availableCellData)}
     >
       <span>{date.getDate()}</span>
-      {leaveStatement && (
+      {availableCellData?.leaveStatement && (
         <span
           style={{
             background: 'linear-gradient(90deg, #f8fafc 0%, #e0e7ff 100%)',
@@ -110,17 +108,17 @@ const DemoApp = () => {
         This example shows the calendar with custom available dates and language
         toggle.
       </p>
-      <button onClick={handleToggleLanguage} style={{ marginBottom: 8 }}>
+      <button style={{ marginBottom: 8 }} onClick={handleToggleLanguage}>
         Toggle Language ({lang === 'en' ? 'Ar' : 'En'})
       </button>
       <Calendar
         availableDatesInfo={mockAvailableDates}
         lang={lang}
+        mode="customAvailable"
         primaryColor="#ff6600"
         selectedDate={selectedDate}
         setSelectedDate={setSelectedDate}
         unavailableColor="#999999"
-        mode="customAvailable"
       />
       <div style={{ marginTop: 8, marginBottom: 32 }}>
         <b>Selected Date:</b>{' '}
@@ -136,12 +134,12 @@ const DemoApp = () => {
       <Calendar
         availableDatesInfo={mockAvailableDates}
         lang="en"
+        mode="customAvailable"
         primaryColor="#0ea5e9"
+        renderDayCell={renderDayCell}
         selectedDate={selectedDateCustomCell}
         setSelectedDate={setSelectedDateCustomCell}
         unavailableColor="#e5e7eb"
-        mode="customAvailable"
-        renderDayCell={renderDayCell}
       />
       <div style={{ marginTop: 8, marginBottom: 32 }}>
         <b>Selected Date:</b>{' '}
@@ -156,11 +154,11 @@ const DemoApp = () => {
       <Calendar
         availableDatesInfo={mockAvailableDates}
         lang="ar"
+        mode="customAvailable"
         primaryColor="#16a34a"
         selectedDate={selectedDateArabic}
         setSelectedDate={setSelectedDateArabic}
         unavailableColor="#d1d5db"
-        mode="customAvailable"
       />
       <div style={{ marginTop: 8, marginBottom: 32 }}>
         <b>Selected Date:</b>{' '}

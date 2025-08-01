@@ -9,7 +9,8 @@ import {
 import moment from 'moment-hijri';
 
 import { hijriFirstMonthIndex, hijriLastMonthIndex } from './constants';
-import { HijriDate } from './types';
+
+import type { HijriDate } from './types';
 
 export const isFirstHijriMonth = (currentHijriDate: HijriDate) =>
   currentHijriDate.month === hijriFirstMonthIndex;

@@ -3,6 +3,7 @@ import { format } from 'date-fns';
 import styles from '../Calendar.module.css';
 import { getHijriDate } from '../utils';
 
+import type { AvailableDateInfo, RenderDayCellParams } from '../types';
 import type { CSSProperties, JSX } from 'react';
 import type React from 'react';
 
@@ -18,15 +19,8 @@ interface CalendarDayCellProps {
   dayCellClassName?: string;
   dayCellStyle?: CSSProperties;
   onClick: (date: Date) => void;
-  renderDayCell?: (params: {
-    date: Date;
-    isSelected: boolean;
-    isAvailable: boolean;
-    isCurrentDay: boolean;
-    isCurrentMonth: boolean;
-    hijriDate: ReturnType<typeof getHijriDate>;
-    leaveStatement?: string;
-  }) => JSX.Element;
+  availableRowData?: AvailableDateInfo;
+  renderDayCell?: (params: RenderDayCellParams) => JSX.Element;
 }
 
 export const CalendarDayCell: React.FC<CalendarDayCellProps> = ({
@@ -40,6 +34,7 @@ export const CalendarDayCell: React.FC<CalendarDayCellProps> = ({
   dayCellStyle,
   onClick,
   renderDayCell,
+  availableRowData,
 }) => {
   const hijriDate = getHijriDate(date);
   return (
@@ -65,6 +60,7 @@ export const CalendarDayCell: React.FC<CalendarDayCellProps> = ({
           isCurrentDay,
           isCurrentMonth,
           hijriDate,
+          availableCellData: availableRowData,
         })
       ) : (
         <div
