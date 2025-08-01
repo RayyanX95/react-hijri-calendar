@@ -1,6 +1,5 @@
 import styles from './Calendar.module.css';
-import { CalendarHeader } from './components/CalendarHeader';
-import { CalendarTable } from './components/CalendarTable';
+import { CalendarHeader, CalendarTable } from './components';
 import { LABELS } from './i18n';
 import { useManageCalendar } from './useManageCalendar';
 
