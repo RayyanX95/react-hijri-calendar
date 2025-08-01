@@ -113,7 +113,7 @@ export const useManageCalendar = (
       };
     }
     return {
-      month: format(currentActiveViewDate, 'MMMM'),
+      month: format(currentActiveViewDate, 'MMMM', { locale: localeToUse }),
       year: getYear(currentActiveViewDate).toString(),
     };
   };
@@ -131,14 +131,8 @@ export const useManageCalendar = (
   // Generate consistent weekday names starting from Sunday
   const anyDate = new Date(1970, 0, 1);
   const baseSunday = setDay(anyDate, 0);
-  const weekdayNames = Array.from({ length: 7 }).map(
-    (_, i) =>
-      format(addDays(baseSunday, i), localeToUse === enUS ? 'EE' : 'EEEE'),
-
-    // TODO: ..
-    // format(addDays(baseSunday, i), localeToUse === enUS ? "EE" : "EEEE", {
-    //   locale: localeToUse,
-    // })
+  const weekdayNames = Array.from({ length: 7 }).map((_, i) =>
+    format(addDays(baseSunday, i), localeToUse === enUS ? 'EE' : 'EEEE'),
   );
 
   const currentMonthYear = getCurrentMonthYearText();
