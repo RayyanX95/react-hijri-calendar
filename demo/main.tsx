@@ -19,7 +19,6 @@ const mockAvailableDates: AvailableDateInfo[] = Array.from(
   },
 );
 
-console.log('mockAvailableDates', mockAvailableDates);
 const DemoApp = () => {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [lang, setLang] = useState<'en' | 'ar'>('en');
