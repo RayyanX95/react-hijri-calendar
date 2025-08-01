@@ -1,14 +1,11 @@
-import { useEffect, useRef, useState } from 'react';
-import { format, isToday, isSameDay } from 'date-fns';
-
 import styles from './Calendar.module.css';
+import { CalendarHeader, CalendarTable } from './components';
 import { LABELS } from './i18n';
-import { ChevronRightIcon, ChevronLeftIcon } from './icons';
 import { useManageCalendar } from './useManageCalendar';
-import { getHijriDate } from './utils';
 
 import type { AvailableDateInfo, SetSelectedDateFunc } from './types';
-import type { CSSProperties, JSX, KeyboardEvent } from 'react';
+import type { getHijriDate } from './utils';
+import type { CSSProperties, JSX } from 'react';
 
 type CalendarMode = 'allAvailable' | 'customAvailable';
 
@@ -141,34 +138,12 @@ export const Calendar = ({
 
   const weekDays = labels.weekdays;
 
-  const handleClickChevron = (action: 'prev' | 'next') => {
-    if (action === 'prev') {
-      goToPreviousMonth();
-    } else {
-      goToNextMonth();
-    }
+  // Handlers for header
+  const handlePrev = () => {
+    goToPreviousMonth();
   };
-
-  const renderChevronIcon = (action: 'prev' | 'next') => {
-    const isRtl = lang === 'ar';
-    // In RTL, swap the icons for prev/next
-    const Icon =
-      action === 'prev'
-        ? isRtl
-          ? ChevronRightIcon
-          : ChevronLeftIcon
-        : isRtl
-          ? ChevronLeftIcon
-          : ChevronRightIcon;
-    return (
-      <button
-        className={styles.chevronButton}
-        type="button"
-        onClick={() => handleClickChevron(action)}
-      >
-        <Icon />
-      </button>
-    );
+  const handleNext = () => {
+    goToNextMonth();
   };
 
   // Merge default CSS variable values with user style prop and global props
@@ -178,83 +153,6 @@ export const Calendar = ({
     ...style,
   } as CSSProperties;
 
-  // Accessibility: manage focus for keyboard navigation
-  const tableRef = useRef<HTMLTableElement>(null);
-  const [focusedCell, setFocusedCell] = useState<{
-    row: number;
-    col: number;
-  } | null>(null);
-
-  // Find the first available date for initial focus
-  useEffect(() => {
-    if (!focusedCell && weeks.length > 0) {
-      // @ts-expect-error - focusedCell is null initially
-      for (const [row, week] of weeks.entries()) {
-        for (const [col, date] of week.entries()) {
-          const isAvailable =
-            mode === 'allAvailable'
-              ? true
-              : availableDatesInfo?.find(
-                  (item) => item.date === format(date, 'yyyyMMdd'),
-                )?.isAvailable === true;
-          if (isAvailable) {
-            setFocusedCell({ row, col });
-            return;
-          }
-        }
-      }
-    }
-  }, [weeks, availableDatesInfo, focusedCell, mode]);
-
-  // Keyboard navigation handler
-  const handleKeyDown = (e: KeyboardEvent<HTMLTableElement>) => {
-    if (!focusedCell) return;
-    const { row, col } = focusedCell;
-    switch (e.key) {
-      case 'ArrowDown': {
-        e.preventDefault();
-        if (row < weeks.length - 1) setFocusedCell({ row: row + 1, col });
-
-        break;
-      }
-      case 'ArrowUp': {
-        e.preventDefault();
-        if (row > 0) setFocusedCell({ row: row - 1, col });
-
-        break;
-      }
-      case 'ArrowRight': {
-        e.preventDefault();
-        if (col < weeks[row].length - 1) setFocusedCell({ row, col: col + 1 });
-
-        break;
-      }
-      case 'ArrowLeft': {
-        e.preventDefault();
-        if (col > 0) setFocusedCell({ row, col: col - 1 });
-
-        break;
-      }
-      case 'Enter':
-      case ' ': {
-        e.preventDefault();
-        const date = weeks[row][col];
-        handleDateClick(date);
-
-        break;
-      }
-      case 'Escape': {
-        e.preventDefault();
-        tableRef.current?.blur();
-
-        break;
-      }
-      default: {
-        break;
-      }
-    }
-  };
-
   return (
     <div
       aria-label="Calendar"
@@ -262,134 +160,31 @@ export const Calendar = ({
       role="region"
       style={mergedStyle}
     >
-      <div className={styles.header}>
-        <div className={styles.monthYearText}>
-          <span>{currentMonthYear.month}</span>
-          <span>{currentMonthYear.year}</span>
-        </div>
-        <div className={styles.actionsContainer}>
-          <button
-            aria-label="Toggle calendar type"
-            className={styles.toggleButton}
-            onClick={handleToggleHijri}
-          >
-            {isHijri ? labels.gregorian : labels.hijri}
-          </button>
-          <span className={styles.chevronContainer}>
-            {renderChevronIcon('prev')}
-            {renderChevronIcon('next')}
-          </span>
-        </div>
-      </div>
+      <CalendarHeader
+        isHijri={isHijri}
+        labels={labels}
+        lang={lang}
+        month={currentMonthYear.month}
+        year={currentMonthYear.year}
+        onNext={handleNext}
+        onPrev={handlePrev}
+        onToggleHijri={handleToggleHijri}
+      />
       <div className={styles.tableContainer}>
-        <table
-          ref={tableRef}
-          aria-label="Date picker grid"
-          className={styles.table}
-          role="grid"
-          tabIndex={0}
-          onKeyDown={handleKeyDown}
-        >
-          <thead>
-            <tr>
-              {weekDays.map((day, index) => (
-                <th
-                  key={index}
-                  className={styles.tableHeader}
-                  role="columnheader"
-                  scope="col"
-                >
-                  {day}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {weeks.map((week, weekIndex) => (
-              <tr key={weekIndex} role="row">
-                {week.map((date, dateIndex) => {
-                  const isSelectedDate = selectedDate
-                    ? isSameDay(date, selectedDate)
-                    : false;
-
-                  const isAvailable =
-                    mode === 'allAvailable'
-                      ? true
-                      : availableDatesInfo?.find(
-                          (item) => item.date === format(date, 'yyyyMMdd'),
-                        )?.isAvailable === true;
-
-                  const isCurrentDay = isToday(date);
-                  const hijriDate = getHijriDate(date);
-                  const isCurrentMonthDate = isHijri
-                    ? hijriDate.month === currentHijriDate.month &&
-                      hijriDate.year === currentHijriDate.year
-                    : format(date, 'yyyy-MM') ===
-                      format(currentActiveViewDate, 'yyyy-MM');
-
-                  // Accessibility: set focus and ARIA attributes
-                  const isFocused =
-                    focusedCell &&
-                    focusedCell.row === weekIndex &&
-                    focusedCell.col === dateIndex;
-                  // Use a callback ref that only focuses when mounted and focused
-                  const cellRef = (el: HTMLTableDataCellElement | null) => {
-                    if (isFocused && el) {
-                      el.focus();
-                    }
-                  };
-                  return (
-                    <td
-                      key={dateIndex}
-                      ref={isFocused ? cellRef : undefined}
-                      aria-disabled={!isAvailable}
-                      aria-selected={isSelectedDate}
-                      className={[
-                        styles.tableCell,
-                        isCurrentDay ? styles.currentDay : '',
-                        isCurrentMonthDate
-                          ? styles.currentMonth
-                          : styles.notCurrentMonth,
-                        dayCellClassName || '',
-                      ].join(' ')}
-                      role="gridcell"
-                      style={dayCellStyle}
-                      tabIndex={isFocused ? 0 : -1}
-                      onClick={() => handleDateClick(date)}
-                    >
-                      {renderDayCell ? (
-                        <>
-                          {renderDayCell({
-                            date,
-                            isSelected: isSelectedDate,
-                            isAvailable,
-                            isCurrentDay,
-                            isCurrentMonth: isCurrentMonthDate,
-                            hijriDate,
-                          })}
-                        </>
-                      ) : (
-                        <div
-                          className={[
-                            styles.cellContent,
-                            isSelectedDate ? styles.selected : '',
-                            isAvailable ? styles.available : styles.unavailable,
-                          ].join(' ')}
-                        >
-                          <div className={styles.dayContainer}>
-                            {isHijri
-                              ? String(hijriDate.day ?? '')
-                              : format(date, 'd')}
-                          </div>
-                        </div>
-                      )}
-                    </td>
-                  );
-                })}
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <CalendarTable
+          availableDatesInfo={availableDatesInfo}
+          currentActiveViewDate={currentActiveViewDate}
+          currentHijriDate={currentHijriDate}
+          dayCellClassName={dayCellClassName}
+          dayCellStyle={dayCellStyle}
+          isHijri={isHijri}
+          mode={mode}
+          renderDayCell={renderDayCell}
+          selectedDate={selectedDate}
+          weekDays={weekDays}
+          weeks={weeks}
+          onDateClick={handleDateClick}
+        />
       </div>
     </div>
   );
