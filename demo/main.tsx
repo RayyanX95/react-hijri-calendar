@@ -20,14 +20,21 @@ const mockAvailableDates: AvailableDateInfo[] = Array.from(
 );
 
 const DemoApp = () => {
+  // Example 1: Basic usage with custom available dates
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [lang, setLang] = useState<'en' | 'ar'>('en');
+  // Example 2: Calendar with custom day cell rendering
+  const [selectedDateCustomCell, setSelectedDateCustomCell] =
+    useState<Date | null>(null);
+  // Example 3: Calendar in Arabic mode
+  const [selectedDateArabic, setSelectedDateArabic] = useState<Date | null>(
+    null,
+  );
 
   const handleToggleLanguage = () => {
     const currentLang = document.documentElement.lang;
     document.documentElement.lang = currentLang === 'en' ? 'ar' : 'en';
     document.documentElement.dir = currentLang === 'en' ? 'rtl' : 'ltr';
-
     setLang(currentLang === 'en' ? 'ar' : 'en');
   };
 
@@ -46,8 +53,6 @@ const DemoApp = () => {
     isSelected: boolean;
     isAvailable: boolean;
     isCurrentDay: boolean;
-    // isCurrentMonth?: boolean;
-    // hijriDate?: string;
     leaveStatement?: string;
   }
 
@@ -56,8 +61,6 @@ const DemoApp = () => {
     isSelected,
     isAvailable,
     isCurrentDay,
-    // isCurrentMonth,
-    // hijriDate,
     leaveStatement,
   }: RenderDayCellProps) => (
     <div
@@ -94,11 +97,22 @@ const DemoApp = () => {
   );
 
   return (
-    <div style={{ maxWidth: 1200, margin: '2rem auto' }}>
-      <button onClick={handleToggleLanguage}>
+    <div
+      style={{ maxWidth: 1200, margin: '2rem auto', fontFamily: 'sans-serif' }}
+    >
+      <h1 style={{ textAlign: 'center', marginBottom: 32 }}>
+        React Dual Calendar Demo
+      </h1>
+
+      {/* Example 1: Basic usage */}
+      <h2>1. Basic Calendar with Custom Available Dates</h2>
+      <p>
+        This example shows the calendar with custom available dates and language
+        toggle.
+      </p>
+      <button onClick={handleToggleLanguage} style={{ marginBottom: 8 }}>
         Toggle Language ({lang === 'en' ? 'Ar' : 'En'})
       </button>
-      <br />
       <Calendar
         availableDatesInfo={mockAvailableDates}
         lang={lang}
@@ -107,11 +121,50 @@ const DemoApp = () => {
         setSelectedDate={setSelectedDate}
         unavailableColor="#999999"
         mode="customAvailable"
-        // renderDayCell={renderDayCell}
       />
-      <div style={{ marginTop: 16 }}>
+      <div style={{ marginTop: 8, marginBottom: 32 }}>
         <b>Selected Date:</b>{' '}
         {selectedDate ? selectedDate.toLocaleString() : 'None'}
+      </div>
+
+      {/* Example 2: Custom Day Cell Rendering */}
+      <h2>2. Calendar with Custom Day Cell Rendering</h2>
+      <p>
+        This example demonstrates how to use a custom renderer for each day
+        cell.
+      </p>
+      <Calendar
+        availableDatesInfo={mockAvailableDates}
+        lang="en"
+        primaryColor="#0ea5e9"
+        selectedDate={selectedDateCustomCell}
+        setSelectedDate={setSelectedDateCustomCell}
+        unavailableColor="#e5e7eb"
+        mode="customAvailable"
+        renderDayCell={renderDayCell}
+      />
+      <div style={{ marginTop: 8, marginBottom: 32 }}>
+        <b>Selected Date:</b>{' '}
+        {selectedDateCustomCell
+          ? selectedDateCustomCell.toLocaleString()
+          : 'None'}
+      </div>
+
+      {/* Example 3: Calendar in Arabic Mode */}
+      <h2>3. Calendar in Arabic (RTL) Mode</h2>
+      <p>This example shows the calendar fully in Arabic (RTL) mode.</p>
+      <Calendar
+        availableDatesInfo={mockAvailableDates}
+        lang="ar"
+        primaryColor="#16a34a"
+        selectedDate={selectedDateArabic}
+        setSelectedDate={setSelectedDateArabic}
+        unavailableColor="#d1d5db"
+        mode="customAvailable"
+      />
+      <div style={{ marginTop: 8, marginBottom: 32 }}>
+        <b>Selected Date:</b>{' '}
+        {selectedDateArabic ? selectedDateArabic.toLocaleString() : 'None'}
       </div>
     </div>
   );

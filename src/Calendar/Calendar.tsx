@@ -151,6 +151,7 @@ export const Calendar = ({
     '--calendar-primary': primaryColor,
     '--calendar-unavailable': unavailableColor,
     ...style,
+    direction: lang === 'ar' ? 'rtl' : 'ltr',
   } as CSSProperties;
 
   return (
