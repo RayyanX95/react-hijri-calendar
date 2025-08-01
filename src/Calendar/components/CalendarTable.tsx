@@ -55,7 +55,6 @@ export const CalendarTable: React.FC<CalendarTableProps> = ({
   // Find the first available date for initial focus
   React.useEffect(() => {
     if (!focusedCell && weeks.length > 0) {
-      // @ts-expect-error -- this is a workaround for TS not recognizing the type
       for (const [row, week] of weeks.entries()) {
         for (const [col, date] of week.entries()) {
           const isAvailable =
