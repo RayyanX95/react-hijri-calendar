@@ -53,10 +53,10 @@ it('toggles from Hijri to Gregorian calendars', () => {
   const { getByLabelText, getByText } = render(
     <Calendar
       availableDatesInfo={[]}
+      calendarType="hijri"
       lang="en"
       selectedDate={null}
       setSelectedDate={() => {}}
-      calendarType="hijri"
     />,
   );
 
