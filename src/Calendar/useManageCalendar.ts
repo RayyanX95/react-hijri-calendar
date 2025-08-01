@@ -132,7 +132,7 @@ export const useManageCalendar = (
   const anyDate = new Date(1970, 0, 1);
   const baseSunday = setDay(anyDate, 0);
   const weekdayNames = Array.from({ length: 7 }).map((_, i) =>
-    format(addDays(baseSunday, i), localeToUse === enUS ? 'EE' : 'EEEE'),
+    format(addDays(baseSunday, i), localeToUse === enUS ? 'EE' : 'EEEE', { locale: localeToUse }),
   );
 
   const currentMonthYear = getCurrentMonthYearText();
