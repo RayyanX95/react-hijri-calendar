@@ -2,8 +2,8 @@ import { useEffect, useRef, useState } from 'react';
 import { format, isToday, isSameDay } from 'date-fns';
 
 import styles from './Calendar.module.css';
+import { CalendarHeader } from './components/CalendarHeader';
 import { LABELS } from './i18n';
-import { ChevronRightIcon, ChevronLeftIcon } from './icons';
 import { useManageCalendar } from './useManageCalendar';
 import { getHijriDate } from './utils';
 
@@ -141,34 +141,12 @@ export const Calendar = ({
 
   const weekDays = labels.weekdays;
 
-  const handleClickChevron = (action: 'prev' | 'next') => {
-    if (action === 'prev') {
-      goToPreviousMonth();
-    } else {
-      goToNextMonth();
-    }
+  // Handlers for header
+  const handlePrev = () => {
+    goToPreviousMonth();
   };
-
-  const renderChevronIcon = (action: 'prev' | 'next') => {
-    const isRtl = lang === 'ar';
-    // In RTL, swap the icons for prev/next
-    const Icon =
-      action === 'prev'
-        ? isRtl
-          ? ChevronRightIcon
-          : ChevronLeftIcon
-        : isRtl
-          ? ChevronLeftIcon
-          : ChevronRightIcon;
-    return (
-      <button
-        className={styles.chevronButton}
-        type="button"
-        onClick={() => handleClickChevron(action)}
-      >
-        <Icon />
-      </button>
-    );
+  const handleNext = () => {
+    goToNextMonth();
   };
 
   // Merge default CSS variable values with user style prop and global props
@@ -262,25 +240,16 @@ export const Calendar = ({
       role="region"
       style={mergedStyle}
     >
-      <div className={styles.header}>
-        <div className={styles.monthYearText}>
-          <span>{currentMonthYear.month}</span>
-          <span>{currentMonthYear.year}</span>
-        </div>
-        <div className={styles.actionsContainer}>
-          <button
-            aria-label="Toggle calendar type"
-            className={styles.toggleButton}
-            onClick={handleToggleHijri}
-          >
-            {isHijri ? labels.gregorian : labels.hijri}
-          </button>
-          <span className={styles.chevronContainer}>
-            {renderChevronIcon('prev')}
-            {renderChevronIcon('next')}
-          </span>
-        </div>
-      </div>
+      <CalendarHeader
+        isHijri={isHijri}
+        labels={labels}
+        lang={lang}
+        month={currentMonthYear.month}
+        year={currentMonthYear.year}
+        onNext={handleNext}
+        onPrev={handlePrev}
+        onToggleHijri={handleToggleHijri}
+      />
       <div className={styles.tableContainer}>
         <table
           ref={tableRef}
