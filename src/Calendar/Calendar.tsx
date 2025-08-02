@@ -14,10 +14,6 @@ import type {
 } from './types';
 import type { CSSProperties, JSX } from 'react';
 
-// Move type definitions to a separate file if needed
-// Handle initial selected date and setSelectedDate function as optional props and ...
-//
-
 interface CalendarProps {
   /** Initially selected date (Date object) */
   initialSelectedDate?: Date | null;
@@ -125,7 +121,7 @@ export const Calendar = ({
   const handleSelectedDate = (date: Date) => {
     if (!setSelectedDate) return;
 
-    setSelectedDate?.(date);
+    setSelectedDate(date);
     setSelectedDateLocal(date);
   };
 
