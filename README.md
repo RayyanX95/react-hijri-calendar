@@ -20,7 +20,7 @@ npm install react-hijri-calendar
 
 ### Example 1: Basic Calendar (Default)
 
-![Basic Calendar](./assets/basic.png)
+![Basic Calendar](https://raw.githubusercontent.com/RayyanX95/react-hijri-calendar/5fecb385a40a46ed66a2ac1c717443ee43d3e4b1/assets/basic.png)
 
 ```tsx
 import { Calendar } from 'react-hijri-calendar';
@@ -32,7 +32,7 @@ function Example1() {
 
 ### Example 2: Calendar with Custom Available Dates & Language Toggle
 
-![Custom Available](./assets/custom-available.png)
+![Custom Available](https://raw.githubusercontent.com/RayyanX95/react-hijri-calendar/5fecb385a40a46ed66a2ac1c717443ee43d3e4b1/assets/custom-available.png)
 
 ```tsx
 import { Calendar } from 'react-hijri-calendar';
@@ -66,7 +66,7 @@ function Example2() {
 
 ### Example 3: Calendar with Custom Day Cell Rendering
 
-![Custom Day Cell](./assets/custom-rendering.png)
+![Custom Day Cell](https://raw.githubusercontent.com/RayyanX95/react-hijri-calendar/5fecb385a40a46ed66a2ac1c717443ee43d3e4b1/assets/custom-rendering.png)
 
 ```tsx
 import { Calendar } from 'react-hijri-calendar';
@@ -137,7 +137,7 @@ function Example3() {
 
 ### Example 4: Calendar in Arabic (RTL) Mode
 
-![Arabic RTL](./assets/ar-rtl.png)
+![Arabic RTL](https://raw.githubusercontent.com/RayyanX95/react-hijri-calendar/5fecb385a40a46ed66a2ac1c717443ee43d3e4b1/assets/ar-rtl.png)
 
 ```tsx
 import { Calendar } from 'react-hijri-calendar';
