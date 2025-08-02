@@ -9,8 +9,8 @@ describe('Calendar', () => {
     const { getByText } = render(
       <Calendar
         availableDatesInfo={[]}
+        initialSelectedDate={null}
         lang="en"
-        selectedDate={null}
         setSelectedDate={() => {}}
       />,
     );
@@ -23,8 +23,8 @@ it('renders in Arabic (RTL) mode', () => {
   const { getByText } = render(
     <Calendar
       availableDatesInfo={[]}
+      initialSelectedDate={null}
       lang="ar"
-      selectedDate={null}
       setSelectedDate={() => {}}
     />,
   );
@@ -37,8 +37,8 @@ it('toggles from Gregorian to Hijri calendars', () => {
   const { getByLabelText, getByText } = render(
     <Calendar
       availableDatesInfo={[]}
+      initialSelectedDate={null}
       lang="en"
-      selectedDate={null}
       setSelectedDate={() => {}}
     />,
   );
@@ -54,8 +54,8 @@ it('toggles from Hijri to Gregorian calendars', () => {
     <Calendar
       availableDatesInfo={[]}
       calendarType="hijri"
+      initialSelectedDate={null}
       lang="en"
-      selectedDate={null}
       setSelectedDate={() => {}}
     />,
   );
@@ -71,8 +71,8 @@ it('handles date selection', () => {
   const { getByText } = render(
     <Calendar
       availableDatesInfo={[]}
+      initialSelectedDate={null}
       lang="en"
-      selectedDate={null}
       setSelectedDate={mockSetSelectedDate}
     />,
   );
