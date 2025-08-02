@@ -117,10 +117,6 @@ const DemoApp = () => {
           This is the default calendar with no customizations.
         </p>
         <Calendar />
-        <div style={{ marginTop: 12 }}>
-          <b>Selected Date:</b>{' '}
-          {selectedDate ? selectedDate.toLocaleString() : 'None'}
-        </div>
       </section>
 
       {/* Example 2: Calendar with Custom Available Dates & Language Toggle */}
