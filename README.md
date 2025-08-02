@@ -18,56 +18,168 @@ npm install react-hijri-calendar
 
 ## Usage
 
+### Example 1: Basic Calendar (Default)
+
+![Basic Calendar](https://raw.githubusercontent.com/RayyanX95/react-hijri-calendar/5fecb385a40a46ed66a2ac1c717443ee43d3e4b1/assets/basic.png)
+
 ```tsx
 import { Calendar } from 'react-hijri-calendar';
 
-function MyComponent() {
-  const [selectedDate, setSelectedDate] = useState(null);
-  // For 'customAvailable' mode:
+function Example1() {
+  return <Calendar />;
+}
+```
+
+### Example 2: Calendar with Custom Available Dates & Language Toggle
+
+![Custom Available](https://raw.githubusercontent.com/RayyanX95/react-hijri-calendar/5fecb385a40a46ed66a2ac1c717443ee43d3e4b1/assets/custom-available.png)
+
+```tsx
+import { Calendar } from 'react-hijri-calendar';
+import { useState } from 'react';
+
+function Example2() {
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [lang, setLang] = useState<'en' | 'ar'>('en');
   const availableDatesInfo = [
-    { date: '20250730', isAvailable: true, leaveStatement: '' },
+    { date: '20250801', isAvailable: true, leaveStatement: '' },
     // ...
   ];
   return (
     <>
-      {/* All days selectable (allAvailable mode --- default) */}
+      <button onClick={() => setLang(lang === 'en' ? 'ar' : 'en')}>
+        {lang === 'en' ? 'Switch to Arabic' : 'التبديل إلى الإنجليزية'}
+      </button>
       <Calendar
-        selectedDate={selectedDate}
-        setSelectedDate={setSelectedDate}
-        lang="en" // or "ar"
-        // calendarType="hijri" // Uncomment to force Hijri calendar regardless of lang
-      />
-
-      {/* Only specific dates selectable (customAvailable mode) */}
-      <Calendar
-        selectedDate={selectedDate}
-        setSelectedDate={setSelectedDate}
         availableDatesInfo={availableDatesInfo}
+        initialSelectedDate={selectedDate}
+        lang={lang}
         mode="customAvailable"
-        lang="en"
+        primaryColor="#ff6600"
+        setSelectedDate={setSelectedDate}
+        unavailableColor="#999999"
       />
     </>
   );
 }
 ```
 
+### Example 3: Calendar with Custom Day Cell Rendering
+
+![Custom Day Cell](https://raw.githubusercontent.com/RayyanX95/react-hijri-calendar/5fecb385a40a46ed66a2ac1c717443ee43d3e4b1/assets/custom-rendering.png)
+
+```tsx
+import { Calendar } from 'react-hijri-calendar';
+import { useState } from 'react';
+
+function Example3() {
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const availableDatesInfo = [
+    { date: '20250801', isAvailable: true, leaveStatement: '' },
+    // ...
+  ];
+  return (
+    <Calendar
+      availableDatesInfo={availableDatesInfo}
+      initialSelectedDate={selectedDate}
+      lang="en"
+      mode="customAvailable"
+      primaryColor="#0ea5e9"
+      renderDayCell={({
+        date,
+        isSelected,
+        isAvailable,
+        isCurrentDay,
+        availableCellData,
+      }) => (
+        <div
+          style={{
+            backgroundColor: isSelected
+              ? '#0ea5e9'
+              : isCurrentDay
+                ? '#fffde7'
+                : isAvailable
+                  ? '#fff'
+                  : '#f0f0f0',
+            color: isSelected ? '#fff' : '#000',
+            padding: '28px 4px',
+            cursor: isAvailable ? 'pointer' : 'not-allowed',
+          }}
+        >
+          <span>{date.getDate()}</span>
+          {availableCellData?.leaveStatement && (
+            <span
+              style={{
+                background: 'linear-gradient(90deg, #f8fafc 0%, #e0e7ff 100%)',
+                color: '#3b82f6',
+                border: '1px solid #a5b4fc',
+                borderRadius: '2px',
+                padding: '0.2rem 0.3rem',
+                marginLeft: '0.5rem',
+                fontWeight: 500,
+                fontSize: '0.5em',
+                boxShadow: '0 1px 3px rgba(59,130,246,0.07)',
+                cursor: 'pointer',
+              }}
+              title="Leave Statement for national holidays"
+            >
+              i
+            </span>
+          )}
+        </div>
+      )}
+      setSelectedDate={setSelectedDate}
+      unavailableColor="#e5e7eb"
+    />
+  );
+}
+```
+
+### Example 4: Calendar in Arabic (RTL) Mode
+
+![Arabic RTL](https://raw.githubusercontent.com/RayyanX95/react-hijri-calendar/5fecb385a40a46ed66a2ac1c717443ee43d3e4b1/assets/ar-rtl.png)
+
+```tsx
+import { Calendar } from 'react-hijri-calendar';
+import { useState } from 'react';
+
+function Example4() {
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const availableDatesInfo = [
+    { date: '20250801', isAvailable: true, leaveStatement: '' },
+    // ...
+  ];
+  return (
+    <Calendar
+      availableDatesInfo={availableDatesInfo}
+      initialSelectedDate={selectedDate}
+      lang="ar"
+      mode="customAvailable"
+      primaryColor="#16a34a"
+      setSelectedDate={setSelectedDate}
+      unavailableColor="#d1d5db"
+    />
+  );
+}
+```
+
 ## Props
 
-| Prop               | Type                                  | Description                                                                                                               |
-| ------------------ | ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
-| selectedDate       | `Date \| null`                        | Currently selected date (Date object or null)                                                                             |
-| setSelectedDate    | `(date: Date) => void`                | Callback to update selected date.                                                                                         |
-| availableDatesInfo | `AvailableDateInfo[]`                 | Array of date info objects (required for `customAvailable` mode)                                                          |
-| mode               | `'allAvailable' \| 'customAvailable'` | Calendar selection mode. `'allAvailable'` = all days selectable (default), `'customAvailable'` = only availableDatesInfo. |
-| lang               | `'en' \| 'ar'`                        | Language for labels                                                                                                       |
-| calendarType       | `'hijri' \| 'gregorian'`              | Force calendar type. If not provided, falls back to `lang` (`'ar'` = Hijri, `'en'` = Gregorian).                          |
-| renderDayCell      | `function`                            | Custom day cell renderer                                                                                                  |
-| className          | `string`                              | Custom class for main container                                                                                           |
-| style              | `React.CSSProperties`                 | Inline styles for main container (supports CSS variables for theming)                                                     |
-| dayCellStyle       | `React.CSSProperties`                 | Inline styles for day cells                                                                                               |
-| dayCellClassName   | `string`                              | Custom class for day cells                                                                                                |
-| primaryColor       | `string`                              | Primary color (overrides default)                                                                                         |
-| unavailableColor   | `string`                              | Unavailable color (overrides default)                                                                                     |
+| Prop                | Type                                  | Description                                                                                                               |
+| ------------------- | ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| initialSelectedDate | `Date \| null`                        | Initial selected date (Date object or null)                                                                               |
+| setSelectedDate     | `(date: Date) => void`                | Callback to update selected date.                                                                                         |
+| availableDatesInfo  | `AvailableDateInfo[]`                 | Array of date info objects (required for `customAvailable` mode)                                                          |
+| mode                | `'allAvailable' \| 'customAvailable'` | Calendar selection mode. `'allAvailable'` = all days selectable (default), `'customAvailable'` = only availableDatesInfo. |
+| lang                | `'en' \| 'ar'`                        | Language for labels                                                                                                       |
+| calendarType        | `'hijri' \| 'gregorian'`              | Force calendar type. If not provided, falls back to `lang` (`'ar'` = Hijri, `'en'` = Gregorian).                          |
+| renderDayCell       | `function`                            | Custom day cell renderer                                                                                                  |
+| className           | `string`                              | Custom class for main container                                                                                           |
+| style               | `React.CSSProperties`                 | Inline styles for main container (supports CSS variables for theming)                                                     |
+| dayCellStyle        | `React.CSSProperties`                 | Inline styles for day cells                                                                                               |
+| dayCellClassName    | `string`                              | Custom class for day cells                                                                                                |
+| primaryColor        | `string`                              | Primary color (overrides default)                                                                                         |
+| unavailableColor    | `string`                              | Unavailable color (overrides default)                                                                                     |
 
 ## Calendar Type
 
@@ -112,12 +224,14 @@ Override colors and styles using the `primaryColor`, `unavailableColor`, `classN
     isSelected,
     isAvailable,
     isCurrentDay,
-    isCurrentMonth,
-    hijriDate,
+    availableCellData,
   }) => (
-    <td style={{ background: isSelected ? 'gold' : undefined }}>
-      {hijriDate.day}
-    </td>
+    <div style={{ background: isSelected ? 'gold' : undefined }}>
+      {date.getDate()}
+      {availableCellData?.leaveStatement && (
+        <span>{availableCellData.leaveStatement}</span>
+      )}
+    </div>
   )}
   // ...
 />
@@ -137,6 +251,8 @@ export type AvailableDateInfo = {
   date: string; // 'YYYYMMDD' format
   isAvailable: boolean;
   leaveStatement?: string;
+  isHalfDay?: boolean;
+  note?: string;
 };
 ```
 

@@ -23,3 +23,7 @@ export interface RenderDayCellParams {
   hijriDate: HijriDate;
   availableCellData?: AvailableDateInfo;
 }
+
+export type CalendarMode = 'allAvailable' | 'customAvailable';
+
+export type CalendarType = 'hijri' | 'gregorian';
