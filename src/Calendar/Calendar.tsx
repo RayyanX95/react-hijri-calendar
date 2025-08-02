@@ -1,3 +1,5 @@
+import { useState } from 'react';
+
 import styles from './Calendar.module.css';
 import { CalendarHeader, CalendarTable } from './components';
 import { LABELS } from './i18n';
@@ -5,20 +7,22 @@ import { useManageCalendar } from './useManageCalendar';
 
 import type {
   AvailableDateInfo,
+  CalendarMode,
+  CalendarType,
   RenderDayCellParams,
   SetSelectedDateFunc,
 } from './types';
 import type { CSSProperties, JSX } from 'react';
 
-type CalendarMode = 'allAvailable' | 'customAvailable';
-
-type CalendarType = 'hijri' | 'gregorian';
+// Move type definitions to a separate file if needed
+// Handle initial selected date and setSelectedDate function as optional props and ...
+//
 
 interface CalendarProps {
-  /** Currently selected date (Date object) */
-  selectedDate: Date | null;
+  /** Initially selected date (Date object) */
+  initialSelectedDate?: Date | null;
   /** Callback to update selected date */
-  setSelectedDate: SetSelectedDateFunc;
+  setSelectedDate?: SetSelectedDateFunc;
   /** Array of date availability information (required for customAvailable mode) */
   availableDatesInfo?: AvailableDateInfo[];
   /** Calendar selection mode */
@@ -81,7 +85,7 @@ interface CalendarProps {
  * ```
  */
 export const Calendar = ({
-  selectedDate,
+  initialSelectedDate: selectedDate,
   setSelectedDate,
   availableDatesInfo,
   mode = 'allAvailable',
@@ -95,6 +99,9 @@ export const Calendar = ({
   primaryColor = '#1b8354',
   unavailableColor = '#6c737f',
 }: CalendarProps): JSX.Element => {
+  const [selectedDateLocal, setSelectedDateLocal] = useState<Date | null>(
+    selectedDate || null,
+  );
   // Validate props based on mode
   if (
     mode === 'customAvailable' &&
@@ -114,6 +121,14 @@ export const Calendar = ({
       : calendarType === 'gregorian'
         ? false
         : lang === 'ar';
+
+  const handleSelectedDate = (date: Date) => {
+    if (!setSelectedDate) return;
+
+    setSelectedDate?.(date);
+    setSelectedDateLocal(date);
+  };
+
   const {
     weeks,
     currentMonthYear,
@@ -126,7 +141,7 @@ export const Calendar = ({
     currentActiveViewDate,
   } = useManageCalendar(
     availableDatesInfo || [],
-    setSelectedDate,
+    handleSelectedDate,
     lang,
     initialIsHijri,
     mode,
@@ -177,7 +192,7 @@ export const Calendar = ({
           isHijri={isHijri}
           mode={mode}
           renderDayCell={renderDayCell}
-          selectedDate={selectedDate}
+          selectedDate={selectedDateLocal}
           weekDays={weekDays}
           weeks={weeks}
           onDateClick={handleDateClick}
